@@ -1,103 +1,176 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import React, { useState } from 'react';
+import { Product } from '../context/CartContext';
+
+// Import your existing components
+import HomePage from '../components/HomePage'; // Adjust path as needed
+import Header from '../components/Header';
+
+// You'll need to create or import these other page components
+import CategoryPage from '../components/CategoryPage';
+import AboutPage from '../components/Aboutus';
+import ContactPage from '../components/Contactus';
+import CartPage from '../components/CartPage';
+import CheckoutPage from '../components/CheckoutPage'; // Add this import
+import Footer from '@/components/Footer';
+import HowItWorksPage from '../components/HowItWorks'; // Adjust path as needed
+import HowItWorks from '../components/HowItWorks';
+import SearchPage from '../components/SearchPage'; // Add this import
+
+export default function MainApp() {
+  const [currentPage, setCurrentPage] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Handle page navigation
+  const handlePageChange = (page: string) => {
+    console.log('Navigate to:', page);
+    
+    if (page.startsWith('category-')) {
+      const category = page.replace('category-', '');
+      setSelectedCategory(category);
+      setCurrentPage('category');
+    } else if (page === 'shop-all') {
+      setSelectedCategory('all');
+      setCurrentPage('category');
+    } else {
+      setCurrentPage(page);
+    }
+  };
+
+  // Handle category clicks
+  const handleCategoryClick = (category: string) => {
+    console.log('Category clicked:', category);
+    setSelectedCategory(category);
+    setCurrentPage('category');
+  };
+
+  // Handle product clicks
+  const handleProductClick = (product: Product) => {
+    console.log('Product clicked:', product);
+    // Add your product click logic here
+    // Maybe navigate to product detail page or add to cart
+  };
+
+  // Handle search
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    setCurrentPage('search');
+    console.log('Search for:', query);
+    // Implement your search logic here
+  };
+
+  // Handle checkout click
+  const handleCheckoutClick = () => {
+    console.log('Proceed to checkout');
+    setCurrentPage('checkout'); // Add this line to navigate to checkout page
+  };
+
+  // Handle order completion
+  const handleOrderComplete = () => {
+    console.log('Order completed');
+    setCurrentPage('order-complete'); // Navigate to order complete page
+  };
+
+  // Render different pages based on currentPage state
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'home':
+        return (
+          <HomePage 
+            onProductClick={handleProductClick}
+            onCategoryClick={handleCategoryClick}
+          />
+        );
+      
+      case 'category':
+        return (
+          <CategoryPage 
+            category={selectedCategory}
+            onProductClick={handleProductClick}
+          />
+        );
+      
+      case 'about':
+        return <AboutPage />;
+      
+      case 'contact':
+        return <ContactPage />;
+      
+      case 'how-it-works':
+        return (
+          <HowItWorks/>
+        );
+      
+      case 'cart':
+        return (
+          <CartPage 
+            onCheckoutClick={handleCheckoutClick} // Use the proper handler
+            onContinueShoppingClick={() => {
+              // Navigate back to shopping
+              setCurrentPage('home');
+            }}
+          />
+        );
+
+      case 'checkout':
+        return (
+          <CheckoutPage 
+            onOrderComplete={handleOrderComplete}
+          />
+        );
+
+      case 'order-complete':
+        return (
+          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="text-center">
+              <div className="text-6xl mb-4">✅</div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-4">Order Complete!</h1>
+              <p className="text-gray-600 mb-8">Thank you for your order. You will receive a confirmation email shortly.</p>
+              <button
+                onClick={() => setCurrentPage('home')}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        );
+      
+      case 'search':
+        return (
+          <SearchPage 
+            searchQuery={searchQuery}
+            onProductClick={handleProductClick}
+          />
+        );
+      
+      default:
+        return (
+          <HomePage 
+            onProductClick={handleProductClick}
+            onCategoryClick={handleCategoryClick}
+          />
+        );
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+    <div className="min-h-screen">
+      <Header 
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+        onSearch={handleSearch}
+        selectedCategory={selectedCategory}
+      />
+      
+      {renderCurrentPage()}
+      
+      <Footer 
+        onPageChange={handlePageChange}
+        onCategoryClick={handleCategoryClick}
+      />
     </div>
   );
 }

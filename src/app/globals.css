@@ -1,4 +1,159 @@
-@import "tailwindcss";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.hero-section {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  padding: 4rem 1rem;
+}
+
+.hero-content {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.hero-text h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.hero-text p {
+  font-size: 1.25rem;
+  color: #6b7280;
+  margin-bottom: 3rem;
+}
+
+.hero-features {
+  margin-bottom: 2rem;
+}
+
+.hero-features .feature {
+  text-align: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.hero-features .feature:hover {
+  transform: translateY(-2px);
+}
+
+.hero-features .feature span {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.hero-features .feature h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.hero-features .feature p {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.hero-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hero-rating span:first-child {
+  font-size: 1.125rem;
+}
+
+.hero-rating span:last-child {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.hero-image {
+  position: relative;
+}
+
+.hero-image img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-text h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-text p {
+    font-size: 1rem;
+  }
+  
+  .hero-features {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-image img {
+    height: 250px;
+  }
+}
+scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line Clamp Utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+@media (max-width: 768px) {
+  .hero-text h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .hero-text p {
+    font-size: 1rem;
+    text-align: center;
+  }
+  .company-name {
+    display: none;
+  }
+  .logo{
+    height: 40px;
+  }
+
+}
 
 :root {
   --background: #ffffff;
