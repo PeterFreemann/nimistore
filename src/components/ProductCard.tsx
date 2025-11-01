@@ -41,17 +41,17 @@ export default function ProductCard({
 
   return (
     <div
-      className="rounded-lg overflow-hidden cursor-pointer relative group w-65 h-60 bg-gray-100"
+      className="rounded-lg overflow-hidden cursor-pointer relative group w-65 h-60 bg-gray-100 bg-white"
       onClick={handleCardClick}
     >
-      {/* Product Image - Full card */}
-      <div className="relative w-full h-full">
+      {/* Product Image - Fixed container */}
+      <div className="relative w-full h-full flex items-center justify-center p-4">
         <img
-          src={product.image} // Use the product's image property
+          src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
           onError={(e) => {
-            e.currentTarget.src = "/fallback-image.jpg"; // Add a fallback
+            e.currentTarget.src = "/fallback-image.jpg";
           }}
         />
 
