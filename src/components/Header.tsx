@@ -6,10 +6,11 @@ import { useCart } from '../context/CartContext';
 import { StaticImageData } from 'next/image';
 import logo from '../images/logo.jpg';
 import farmproducehero from '../images/farmproducehero.jpg';
-import frozenproteinshero from '../images/farmproducehero.jpg';
-import drinkshero from '../images/farmproducehero.jpg';
-import fruitwinehero from '../images/farmproducehero.jpg';
-import snackshero from '../images/farmproducehero.jpg';
+import frozenproteinshero from '../../public/frozenproteins.png';
+import drinkshero from '../../public/softdrinks.jpg';
+import fruitwinehero from '../../public/fruitwine.jpg';
+import snackshero from '../../public/snacks.jpeg';
+import beautyhero from '../../public/beauty.jpg';
 
 interface HeaderProps {
   currentPage: string;
@@ -51,7 +52,7 @@ export default function Header({ currentPage, onPageChange, onSearch, selectedCa
     'Drinks': drinkshero,
     'Wine': fruitwinehero,
     'Snacks': snackshero,
-    'Beauty & Personal Care': snackshero, // Placeholder image
+    'Beauty & Personal Care': beautyhero, // Placeholder image
   };
 
   // Function to get hero image for current page/category

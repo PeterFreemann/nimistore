@@ -13,13 +13,6 @@ interface CombinedCategorySectionProps {
 }
 
 const categories = [
-  // {
-  //   id: 'fresh proteins',
-  //   name: 'Fresh Proteins',
-  //   icon: '🥩',
-  //   description: 'Fresh meat, fish and poultry',
-  //   filter: (product: Product) => product.category === 'Frozen proteins'
-  // },
   {
     id: 'fresh food',
     name: 'Fresh Food',
@@ -51,7 +44,7 @@ export default function CombinedCategorySection({
   onCategoryClick,
   onViewClick
 }: CombinedCategorySectionProps) {
-  const [selectedCategory, setSelectedCategory] = useState('fresh proteins');
+  const [selectedCategory, setSelectedCategory] = useState('fresh food');
   const { addItem } = useCart();
 
   // Use products directly from the import instead of passed props
@@ -59,7 +52,6 @@ export default function CombinedCategorySection({
 
   // Debug: Check what products we have
   console.log('All products from direct import:', allProducts);
-  console.log('Fresh proteins products:', allProducts.filter(p => p.category === 'Frozen proteins'));
   console.log('Fresh Food products:', allProducts.filter(p => p.category === 'Fresh Food'));
   console.log('Beauty products:', allProducts.filter(p => p.category === 'Beauty & Personal Care'));
   console.log('Snacks products:', allProducts.filter(p => p.category === 'Snacks'));
@@ -157,11 +149,12 @@ export default function CombinedCategorySection({
                       </span>
                     </div>
 
-                    <div className="relative overflow-hidden">
+                    {/* Fixed Image Container */}
+                    <div className="relative h-48 bg-gray-50 flex items-center justify-center p-4">
                       <img
                         src={product.image}
                         alt={product.name}
-                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
                         onError={(e) => {
                           e.currentTarget.src = '/images/fallback.jpg';
                         }}
