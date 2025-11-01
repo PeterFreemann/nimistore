@@ -266,14 +266,22 @@ export default function CategoryPage({ category, onProductClick, onViewClick }: 
             }`}>
               {paginatedProducts.map((product) => (
                 <div key={product.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group">
-                  <div className="relative overflow-hidden">
+                  {/* Fixed Image Container */}
+                  <div className="relative h-48 bg-gray-50 flex items-center justify-center p-4">
                     <img
                       src={product.image}
                       alt={product.name}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      onError={(e) => {
+                        e.currentTarget.src = '/images/fallback.jpg';
+                      }}
                     />
                     <div className="absolute top-2 right-2">
-                      <span className="bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        product.inStock 
+                          ? 'bg-emerald-500 text-white' 
+                          : 'bg-red-500 text-white'
+                      }`}>
                         {product.inStock ? 'In Stock' : 'Out of Stock'}
                       </span>
                     </div>
@@ -288,15 +296,15 @@ export default function CategoryPage({ category, onProductClick, onViewClick }: 
                     </p>
                     
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-2xl font-bold  text-emerald-600">
+                      <span className="text-2xl font-bold text-emerald-600">
                         £{product.price.toFixed(2)}
                       </span>
-                      <span className="text-sm text-black text-gray-500">{product.weight}</span>
+                      <span className="text-sm text-gray-500">{product.weight}</span>
                     </div>
                     
                     <div className="flex space-x-2">
                       <button
-                        onClick={(e) => handleAddToCart(product, e)} // Changed this line
+                        onClick={(e) => handleAddToCart(product, e)}
                         disabled={!product.inStock}
                         className="flex-1 bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
                       >
@@ -315,6 +323,74 @@ export default function CategoryPage({ category, onProductClick, onViewClick }: 
                 </div>
               ))}
             </div>
+
+            {/* List View */}
+            {viewMode === 'list' && (
+              <div className="space-y-4">
+                {paginatedProducts.map((product) => (
+                  <div key={product.id} className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group">
+                    <div className="flex">
+                      {/* Fixed Image Container for List View */}
+                      <div className="w-48 h-48 bg-gray-50 flex items-center justify-center p-4 flex-shrink-0">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                          onError={(e) => {
+                            e.currentTarget.src = '/images/fallback.jpg';
+                          }}
+                        />
+                      </div>
+                      
+                      <div className="flex-1 p-6">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <h4 className="font-semibold text-black text-xl mb-2 group-hover:text-emerald-600 transition-colors">
+                              {product.name}
+                            </h4>
+                            <p className="text-gray-600 mb-3">
+                              {product.description}
+                            </p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            product.inStock 
+                              ? 'bg-emerald-500 text-white' 
+                              : 'bg-red-500 text-white'
+                          }`}>
+                            {product.inStock ? 'In Stock' : 'Out of Stock'}
+                          </span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between mb-4">
+                          <span className="text-2xl font-bold text-emerald-600">
+                            £{product.price.toFixed(2)}
+                          </span>
+                          <span className="text-sm text-gray-500">{product.weight}</span>
+                        </div>
+                        
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={(e) => handleAddToCart(product, e)}
+                            disabled={!product.inStock}
+                            className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
+                          >
+                            {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                          </button>
+                          {onViewClick && (
+                            <button
+                              onClick={() => onViewClick(product)}
+                              className="px-6 py-2 border border-emerald-600 text-emerald-600 rounded-lg hover:bg-emerald-50 transition-colors font-medium"
+                            >
+                              View Details
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
 
             {/* Pagination */}
             {totalPages > 1 && (
