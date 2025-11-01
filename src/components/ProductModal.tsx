@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ShoppingCart, Star, Plus, Minus } from 'lucide-react';
+import { X, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { Product } from '../context/CartContext';
 import { useCart } from '../context/CartContext';
 
@@ -25,9 +25,6 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
     product.image.replace('400', '403'), // Third variation
   ];
 
-  // Default rating if not provided
-  const productRating = (product as any).rating || 4.0;
-
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
       addItem(product);
@@ -51,10 +48,10 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
       <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-semibold">Product Details</h2>
+          <h2 className="text-xl font-semibold text-black">Product Details</h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors text-black"
           >
             <X size={20} />
           </button>
@@ -110,30 +107,12 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
             </div>
 
             {/* Right side - Product Info */}
-            <div>
+            <div className="flex flex-col">
               {/* Product Name */}
-              <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-
-              {/* Rating */}
-              <div className="flex items-center mb-4">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      size={16}
-                      className={`${
-                        i < Math.floor(productRating) 
-                          ? 'text-yellow-400 fill-current' 
-                          : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <span className="ml-2 text-sm text-gray-600">({productRating})</span>
-              </div>
+              <h1 className="text-2xl font-bold mb-4 text-gray-900">{product.name}</h1>
 
               {/* Category and Weight */}
-              <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-4 mb-6">
                 <span className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-medium">
                   {product.category}
                 </span>
@@ -145,9 +124,11 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
               </div>
 
               {/* Description */}
-              <div className="mb-6">
-                <h3 className="font-semibold mb-2">Description</h3>
-                <p className="text-gray-600 leading-relaxed">{product.description}</p>
+              <div className="mb-6 flex-grow">
+                <h3 className="font-semibold mb-3 text-gray-900">Description</h3>
+                <p className="text-gray-700 leading-relaxed text-base">
+                  {product.description || 'No description available for this product.'}
+                </p>
               </div>
 
               {/* Price */}
@@ -155,24 +136,24 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
                 <span className="text-3xl font-bold text-emerald-600">
                   £{product.price.toFixed(2)}
                 </span>
-                <span className="text-gray-500 ml-2">per unit</span>
+                <span className="text-gray-500 ml-2 text-sm">per unit</span>
               </div>
 
               {/* Quantity Selector */}
               <div className="mb-6">
-                <label className="block text-sm font-medium mb-2">Quantity</label>
+                <label className="block text-sm font-medium mb-2 text-gray-900">Quantity</label>
                 <div className="flex items-center gap-3">
                   <button
                     onClick={decrementQuantity}
-                    className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="w-10 h-10 rounded-full border border-gray-300 flex items-center text-black justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={quantity <= 1}
                   >
                     <Minus size={16} />
                   </button>
-                  <span className="text-xl font-semibold w-12 text-center">{quantity}</span>
+                  <span className="text-xl font-semibold w-12 text-center text-gray-900">{quantity}</span>
                   <button
                     onClick={incrementQuantity}
-                    className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                    className="w-10 h-10 rounded-full text-black border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={quantity >= 10}
                   >
                     <Plus size={16} />
@@ -196,7 +177,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
 
               {/* Total Price Preview */}
               {quantity > 1 && (
-                <div className="mt-3 text-center text-gray-600">
+                <div className="mt-3 text-center text-gray-700 font-medium">
                   Total: £{(product.price * quantity).toFixed(2)}
                 </div>
               )}
