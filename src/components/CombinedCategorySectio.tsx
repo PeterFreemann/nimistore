@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Product } from '../context/CartContext';
 import { useCart } from '../context/CartContext';
+import { products } from '../data/products'; // Import products directly
 
 interface CombinedCategorySectionProps {
   ethnicFoodsProducts: Product[];
@@ -12,23 +13,33 @@ interface CombinedCategorySectionProps {
 }
 
 const categories = [
+  // {
+  //   id: 'fresh proteins',
+  //   name: 'Fresh Proteins',
+  //   icon: '🥩',
+  //   description: 'Fresh meat, fish and poultry',
+  //   filter: (product: Product) => product.category === 'Frozen proteins'
+  // },
   {
-    id: 'ethnic',
-    name: 'Ethnic Foods',
-    icon: '🌍',
-    description: 'Traditional spices and ingredients'
-  },
-  {
-    id: 'meat',
-    name: 'Fish, Meat and Poultry',
-    icon: '🐟',
-    description: 'Fresh and Frozen proteins proteins'
+    id: 'fresh food',
+    name: 'Fresh Food',
+    icon: '🌽',
+    description: 'Fresh vegetables and produce',
+    filter: (product: Product) => product.category === 'Fresh Food'
   },
   {
     id: 'beauty',
-    name: 'Beauty and Household',
+    name: 'Beauty and Personal Care',
     icon: '🧴',
-    description: 'Personal care and home essentials'
+    description: 'Personal care and home essentials',
+    filter: (product: Product) => product.category === 'Beauty & Personal Care'
+  },
+  {
+    id: 'snacks',
+    name: 'Snacks & Drinks',
+    icon: '🍿',
+    description: 'Snacks and beverages',
+    filter: (product: Product) => ['Snacks', 'Drinks'].includes(product.category)
   }
 ];
 
@@ -40,26 +51,33 @@ export default function CombinedCategorySection({
   onCategoryClick,
   onViewClick
 }: CombinedCategorySectionProps) {
-  const [selectedCategory, setSelectedCategory] = useState('ethnic');
-  const { addItem } = useCart(); // Add this line to use cart context
+  const [selectedCategory, setSelectedCategory] = useState('fresh proteins');
+  const { addItem } = useCart();
+
+  // Use products directly from the import instead of passed props
+  const allProducts = products;
+
+  // Debug: Check what products we have
+  console.log('All products from direct import:', allProducts);
+  console.log('Fresh proteins products:', allProducts.filter(p => p.category === 'Frozen proteins'));
+  console.log('Fresh Food products:', allProducts.filter(p => p.category === 'Fresh Food'));
+  console.log('Beauty products:', allProducts.filter(p => p.category === 'Beauty & Personal Care'));
+  console.log('Snacks products:', allProducts.filter(p => p.category === 'Snacks'));
+  console.log('Drinks products:', allProducts.filter(p => p.category === 'Drinks'));
 
   const getProductsForCategory = (categoryId: string) => {
-    switch (categoryId) {
-      case 'ethnic':
-        return ethnicFoodsProducts;
-      case 'meat':
-        return meatFishProducts;
-      case 'beauty':
-        return beautyHouseholdProducts;
-      default:
-        return ethnicFoodsProducts;
-    }
+    const category = categories.find(cat => cat.id === categoryId);
+    if (!category) return allProducts.slice(0, 6);
+    
+    const filteredProducts = allProducts.filter(category.filter);
+    console.log(`Filtered products for ${categoryId}:`, filteredProducts);
+    return filteredProducts.slice(0, 6);
   };
 
   const selectedProducts = getProductsForCategory(selectedCategory);
   const selectedCategoryData = categories.find(cat => cat.id === selectedCategory);
 
-  // Add this function to handle add to cart
+  // Handle add to cart with proper cart functionality
   const handleAddToCart = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
     addItem(product);
@@ -144,6 +162,9 @@ export default function CombinedCategorySection({
                         src={product.image}
                         alt={product.name}
                         className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.src = '/images/fallback.jpg';
+                        }}
                       />
                     </div>
                     
@@ -163,7 +184,7 @@ export default function CombinedCategorySection({
                       
                       <div className="space-y-2">
                         <button
-                          onClick={(e) => handleAddToCart(product, e)} // Changed this line
+                          onClick={(e) => handleAddToCart(product, e)}
                           disabled={!product.inStock}
                           className="w-full bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed font-medium"
                         >
@@ -185,6 +206,9 @@ export default function CombinedCategorySection({
                 <div className="text-center py-12">
                   <div className="text-gray-400 text-6xl mb-4">🛒</div>
                   <p className="text-gray-600">No products available in this category</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Available categories: {allProducts.map(p => p.category).filter((v, i, a) => a.indexOf(v) === i).join(', ')}
+                  </p>
                 </div>
               )}
             </div>

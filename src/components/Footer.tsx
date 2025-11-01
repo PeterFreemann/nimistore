@@ -81,7 +81,7 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
                   </button>
                 </li>
                 <li>
-                  <button 
+                  {/* <button 
                     onClick={() => {
                       // You can create a FAQ page or show FAQ modal
                       console.log('FAQ clicked');
@@ -89,10 +89,10 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     FAQ
-                  </button>
+                  </button> */}
                 </li>
                 <li>
-                  <button 
+                  {/* <button 
                     onClick={() => {
                       // You can create a delivery page or show delivery info modal
                       console.log('Delivery & Returns clicked');
@@ -100,10 +100,10 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Delivery & Returns
-                  </button>
+                  </button> */}
                 </li>
                 <li>
-                  <button 
+                  {/* <button 
                     onClick={() => {
                       // You can create a order tracking page
                       console.log('Track Your Order clicked');
@@ -111,7 +111,7 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Track Your Order
-                  </button>
+                  </button> */}
                 </li>
               </ul>
             </div>
@@ -125,15 +125,15 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
                     onClick={() => onCategoryClick('Fresh Food')}
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
-                    Fresh Farm Produce
+                    Fresh Food
                   </button>
                 </li>
                 <li>
                   <button 
-                    onClick={() => onCategoryClick('Dry Goods')}
+                    onClick={() => onCategoryClick('Fruit Wine')}
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
-                    Dry Goods
+                    Fruit Wine
                   </button>
                 </li>
                 <li>
@@ -150,6 +150,14 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     African Soft Drinks
+                  </button>
+                </li>
+                 <li>
+                  <button 
+                    onClick={() => onCategoryClick('Beauty & Personal Care')}
+                    className="text-green-100 hover:text-white transition-colors text-left"
+                  >
+                    Beauty and Personal Care
                   </button>
                 </li>
               </ul>

@@ -18,6 +18,7 @@ import PromotionalAd from './PromotionalAd';
 import ProductCarousel from './ProductCarousel';
 import BrandValues from './BrandValues';
 import Testimonials from './Testimonials';
+import Ads from './Ads';
 
 // Import the new combined section
 import CombinedCategorySection from './CombinedCategorySectio';
@@ -71,6 +72,8 @@ export default function HomePage({ onProductClick, onCategoryClick }: HomePagePr
         onCategoryClick={onCategoryClick}
         onViewClick={handleProductView}
       />
+
+      <Ads />
       
       <Testimonials />
 

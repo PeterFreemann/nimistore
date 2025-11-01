@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Bot, User, ExternalLink } from 'lucide-react';
+import { products } from '../data/products'; // Import your actual products
 
 interface Message {
   id: string;
   text: string;
   isUser: boolean;
   timestamp: Date;
-  hasActions?: boolean;
   actions?: Array<{
     text: string;
     action: string;
@@ -26,11 +26,10 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
       text: "Hi! I'm your Nimi Store shopping assistant. I can help you find authentic African & Caribbean groceries, answer questions about our products, store information, delivery options, and much more. How can I assist you today?",
       isUser: false,
       timestamp: new Date(),
-      hasActions: true,
       actions: [
         { text: '🥩 Meat & Fish', action: 'Meat, Fish & Poultry', type: 'category' },
         { text: '🥬 Fresh Produce', action: 'Fresh Food', type: 'category' },
-        { text: '🌶️ Ethnic Foods', action: 'Ethnic Foods', type: 'category' }
+        { text: '🧴 Beauty & Care', action: 'Beauty & Personal Care', type: 'category' }
       ]
     }
   ]);
@@ -46,93 +45,64 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
     scrollToBottom();
   }, [messages]);
 
-  const quickResponses = [
-    "Show me fresh produce",
-    "What meat do you have?",
-    "Browse all categories",
-    "Store location & hours",
-    "Delivery information",
-    "Popular African spices"
-  ];
+  // Get actual products by category
+  const getProductsByCategory = (category: string) => {
+    return products.filter(product => product.category === category);
+  };
 
-  // Enhanced product information with detailed meat products
+  // Get all unique categories from products
+  const allCategories = [...new Set(products.map(product => product.category))].filter(Boolean);
+
+  // Enhanced product information based on actual products
   const productInfo = {
     'meat': {
       categories: ['Meat, Fish & Poultry', 'Frozen proteins'],
-      items: [
-        'Fresh Tilapia Fish',
-        'Frozen Goat Meat',
-        'Smoked Fish',
-        'Beef Short Ribs',
-        'Free Range Chicken',
-        'Lamb Shoulder',
-        'Chicken Wings',
-        'Prawns',
-        'Dried Stockfish',
-        'Turkey Wings'
-      ],
-      description: "We offer a wide selection of fresh and frozen meat, fish & poultry including:\n\n• Goat meat (fresh and frozen)\n• Chicken (whole, wings, drumsticks)\n• Beef (short ribs, stew meat)\n• Lamb (shoulder, chops)\n• Fresh tilapia and other fish\n• Smoked and dried fish\n• Prawns and other seafood\n\nAll our products are properly sourced and stored for maximum quality and freshness."
+      items: getProductsByCategory('Meat, Fish & Poultry').map(p => p.name),
+      description: "We offer a wide selection of fresh and frozen meat, fish & poultry including:\n\n• Fresh fish and seafood\n• Frozen proteins like snails\n• Poultry products\n• Traditional African meat cuts\n\nAll our products are properly sourced and stored for maximum quality and freshness."
     },
-    'fresh produce': {
-      categories: ['Fresh Food', 'Vegetables & Fresh Produce'],
-      items: [
-        'Fresh Plantain',
-        'Yam Tuber',
-        'Scotch Bonnet Peppers',
-        'Ginger Root',
-        'Green Beans',
-        'Okra',
-        'Bitter Leaf',
-        'Ugu (Pumpkin Leaves)'
-      ],
-      description: "Fresh African and Caribbean produce including:\n\n• Plantains (green and ripe)\n• Yam tubers\n• Scotch bonnet peppers\n• Fresh ginger and garlic\n• Seasonal vegetables\n• African leafy greens\n\nWe source directly from local and international farms to ensure freshness."
+    'fresh food': {
+      categories: ['Fresh Food'],
+      items: getProductsByCategory('Fresh Food').map(p => p.name),
+      description: "Fresh African and Caribbean produce including:\n\n• Yam flour and beans\n• Fresh vegetables\n• Traditional staples\n• Cooking ingredients\n\nWe source directly from quality suppliers to ensure freshness and authenticity."
     },
-    'ethnic foods': {
-      categories: ['Ethnic Foods'],
-      items: [
-        'Jollof Rice Seasoning',
-        'Curry Goat Seasoning',
-        'Ogbono Seeds',
-        'Locust Beans',
-        'Tamarind Paste',
-        'African Pepper Soup Spice',
-        'Palm Oil',
-        'Groundnut Oil'
-      ],
-      description: "Authentic seasonings and ingredients from West Africa and the Caribbean for traditional dishes:\n\n• Rice seasonings\n• Soup thickeners (ogbono, egusi)\n• Traditional spices\n• Palm oil and other cooking oils\n• Beans and grains\n• Specialty flours"
-    },
-    'frozen': {
+    'frozen proteins': {
       categories: ['Frozen proteins'],
-      items: [
-        'Frozen Goat Meat',
-        'Cassava Leaves',
-        'Chicken Wings',
-        'Prawns',
-        'Smoked Fish',
-        'Turkey Tails',
-        'Ox Tail',
-        'Pre-cut Vegetables'
-      ],
-      description: "Premium frozen proteins and prepared foods:\n\n• Frozen meats (goat, chicken, turkey)\n• Seafood (prawns, fish)\n• Pre-cut vegetables\n• Prepared soup ingredients\n• Specialty frozen items\n\nProperly packaged to maintain freshness and authentic flavors."
+      items: getProductsByCategory('Frozen proteins').map(p => p.name),
+      description: "Premium frozen proteins and specialty items:\n\n• Fresh frozen snails\n• Other frozen delicacies\n• Properly packaged for freshness\n• Traditional African proteins"
+    },
+    'beauty personal care': {
+      categories: ['Beauty & Personal Care'],
+      items: getProductsByCategory('Beauty & Personal Care').map(p => p.name),
+      description: "Beauty and personal care products for African hair and skin:\n\n• Hair extensions and braids\n• Traditional soaps and balms\n• Hair care accessories\n• Personal grooming items"
+    },
+    'snacks': {
+      categories: ['Snacks'],
+      items: getProductsByCategory('Snacks').map(p => p.name),
+      description: "Delicious snacks and breakfast items:\n\n• Cereals and breakfast foods\n• Bread and baked goods\n• Traditional snacks\n• Quick meal options"
+    },
+    'drinks': {
+      categories: ['Drinks'],
+      items: getProductsByCategory('Drinks').map(p => p.name),
+      description: "Refreshing beverages and drink mixes:\n\n• Traditional drink mixes\n• Herbal teas and infusions\n• Beverage ingredients\n• Cultural drinks"
     }
   };
 
-  const mainCategories = [
-    { name: 'All Products', value: 'all', icon: '🛒' },
-    { name: 'Fresh Farm Produce', value: 'Fresh Food', icon: '🥬' },
-    { name: 'Frozen Proteins', value: 'Frozen proteins', icon: '🧊' },
-    { name: 'African Soft Drinks', value: 'Drinks', icon: '🥤' },
-    { name: 'Snacks', value: 'Snacks', icon: '🍿' },
-    { name: 'Fruit Wine', value: 'Beer, Wine & Spirit', icon: '🍷' }
+  const quickResponses = [
+    "Show me fresh food",
+    "What beauty products do you have?",
+    "Browse all categories",
+    "Store location & hours",
+    "Delivery information",
+    "Show me snacks"
   ];
 
-  const specialtyCategories = [
-    { name: 'Ethnic Foods', value: 'Ethnic Foods', icon: '🌶️' },
-    { name: 'Meat, Fish & Poultry', value: 'Meat, Fish & Poultry', icon: '🐟' },
-    { name: 'Health & Beauty', value: 'Health & Beauty', icon: '✨' },
-    { name: 'Household Items', value: 'Household', icon: '🧽' },
-    { name: 'Dry Goods', value: 'Dry Goods', icon: '🌾' },
-    { name: 'Vegetables & Fresh Produce', value: 'Vegetables & Fresh Produce', icon: '🥕' }
+  const mainCategories = [
+    { name: 'All Products', value: 'all', icon: '🛒' },
+    { name: 'Fresh Food', value: 'Fresh Food', icon: '🥬' },
+    { name: 'Frozen Proteins', value: 'Frozen proteins', icon: '🧊' },
+    { name: 'Beauty & Personal Care', value: 'Beauty & Personal Care', icon: '✨' },
+    { name: 'Snacks', value: 'Snacks', icon: '🍿' },
+    { name: 'Drinks', value: 'Drinks', icon: '🥤' }
   ];
 
   const getEnhancedResponse = (userMessage: string): Message => {
@@ -142,109 +112,121 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
     if (message.includes('browse') || message.includes('catalog') || message.includes('categories') || message.includes('sections')) {
       return {
         id: (Date.now() + 1).toString(),
-        text: `🛒 **Browse Our Categories:**\n\n**Main Categories:**\n${mainCategories.map(cat => `${cat.icon} ${cat.name}`).join('\n')}\n\n**Specialty Categories:**\n${specialtyCategories.map(cat => `${cat.icon} ${cat.name}`).join('\n')}\n\nClick any category below to explore products:`,
+        text: `🛒 **Browse Our Categories:**\n\nWe have ${allCategories.length} categories with ${products.length} products available:\n\n${allCategories.map(cat => {
+          const categoryProducts = getProductsByCategory(cat);
+          return `• ${cat} (${categoryProducts.length} products)`;
+        }).join('\n')}\n\nClick any category below to explore:`,
         isUser: false,
         timestamp: new Date(),
-        hasActions: true,
-        actions: [
-          ...mainCategories.map(cat => ({
-            text: cat.name,
-            action: cat.value,
-            type: 'category' as const
-          })),
-          ...specialtyCategories.map(cat => ({
-            text: cat.name,
-            action: cat.value,
-            type: 'category' as const
-          }))
-        ]
+        actions: allCategories.map(cat => ({
+          text: `${cat} (${getProductsByCategory(cat).length})`,
+          action: cat,
+          type: 'category' as const
+        }))
       };
     }
     
-    // Handle meat-specific requests with more detailed responses
-    if (message.includes('meat') || message.includes('protein') || message.includes('goat') || 
-        message.includes('beef') || message.includes('lamb') || message.includes('chicken') || 
-        message.includes('fish') || message.includes('poultry') || message.includes('seafood')) {
+    // Handle meat-specific requests
+    if (message.includes('meat') || message.includes('protein') || message.includes('fish') || 
+        message.includes('poultry') || message.includes('seafood') || message.includes('snail')) {
       const info = productInfo['meat'];
+      const meatProducts = getProductsByCategory('Meat, Fish & Poultry');
+      const frozenProducts = getProductsByCategory('Frozen proteins');
+      
       return {
         id: (Date.now() + 1).toString(),
-        text: `🥩 **Meat, Fish & Poultry Selection:**\n\n${info.description}\n\n**Popular items in this category:**\n${info.items.map(item => `• ${item}`).join('\n')}\n\nClick below to browse our meat sections:`,
+        text: `🥩 **Meat, Fish & Poultry Selection:**\n\n${info.description}\n\n**Available products:**\n${[...meatProducts, ...frozenProducts].map(item => `• ${item.name} - £${item.price.toFixed(2)}`).join('\n')}`,
         isUser: false,
         timestamp: new Date(),
-        hasActions: true,
         actions: [
-          { text: '🐟 View All Meat & Fish', action: 'Meat, Fish & Poultry', type: 'category' },
-          { text: '🧊 View Frozen Proteins', action: 'Frozen proteins', type: 'category' },
-          { text: '🍗 View Chicken Products', action: 'Meat, Fish & Poultry', type: 'category' }
+          { text: '🐟 Meat & Poultry', action: 'Meat, Fish & Poultry', type: 'category' },
+          { text: '🧊 Frozen Proteins', action: 'Frozen proteins', type: 'category' }
         ]
       };
     }
 
-    // Handle fish-specific requests
-    if (message.includes('fish') || message.includes('tilapia') || message.includes('stockfish') || 
-        message.includes('seafood') || message.includes('prawn') || message.includes('shrimp')) {
-      return {
-        id: (Date.now() + 1).toString(),
-        text: `🐟 **Fresh & Preserved Fish:**\n\nWe offer a variety of fresh and preserved fish products:\n\n• Fresh tilapia and other whole fish\n• Smoked fish (mackerel, catfish)\n• Dried stockfish\n• Salted fish\n• Prawns and other seafood\n\nPerfect for traditional African and Caribbean dishes like pepper soup, fish stew, and more.`,
-        isUser: false,
-        timestamp: new Date(),
-        hasActions: true,
-        actions: [
-          { text: '🐟 Browse Fish & Seafood', action: 'Meat, Fish & Poultry', type: 'category' },
-          { text: '🧊 Frozen Seafood', action: 'Frozen proteins', type: 'category' }
-        ]
-      };
-    }
-
-    // Handle fresh produce requests
+    // Handle fresh food requests
     if (message.includes('fresh') || message.includes('produce') || message.includes('vegetable') || 
-        message.includes('plantain') || message.includes('yam') || message.includes('pepper') || 
-        message.includes('okra') || message.includes('leaf')) {
-      const info = productInfo['fresh produce'];
+        message.includes('plantain') || message.includes('yam') || message.includes('beans') || 
+        message.includes('flour') || message.includes('food')) {
+      const info = productInfo['fresh food'];
+      const freshProducts = getProductsByCategory('Fresh Food');
+      
       return {
         id: (Date.now() + 1).toString(),
-        text: `🥬 **Fresh Produce:**\n\n${info.description}\n\n**Currently available:**\n${info.items.map(item => `• ${item}`).join('\n')}\n\nBrowse our fresh produce sections:`,
+        text: `🥬 **Fresh Food & Staples:**\n\n${info.description}\n\n**Available products:**\n${freshProducts.map(item => `• ${item.name} - £${item.price.toFixed(2)}`).join('\n')}`,
         isUser: false,
         timestamp: new Date(),
-        hasActions: true,
         actions: [
-          { text: '🥬 View Fresh Food', action: 'Fresh Food', type: 'category' },
-          { text: '🥕 View Vegetables & Produce', action: 'Vegetables & Fresh Produce', type: 'category' }
+          { text: '🥬 View Fresh Food', action: 'Fresh Food', type: 'category' }
         ]
       };
     }
     
-    // Handle ethnic foods requests
-    if (message.includes('ethnic') || message.includes('spice') || message.includes('seasoning') || 
-        message.includes('jollof') || message.includes('curry') || message.includes('ogbono') || 
-        message.includes('palm oil') || message.includes('egusi')) {
-      const info = productInfo['ethnic foods'];
+    // Handle beauty and personal care requests
+    if (message.includes('beauty') || message.includes('care') || message.includes('hair') || 
+        message.includes('soap') || message.includes('personal') || message.includes('balm') ||
+        message.includes('wig') || message.includes('braid') || message.includes('broom')) {
+      const info = productInfo['beauty personal care'];
+      const beautyProducts = getProductsByCategory('Beauty & Personal Care');
+      
       return {
         id: (Date.now() + 1).toString(),
-        text: `🌶️ **Ethnic Foods & Seasonings:**\n\n${info.description}\n\n**Featured items:**\n${info.items.map(item => `• ${item}`).join('\n')}\n\nExplore authentic ingredients:`,
+        text: `✨ **Beauty & Personal Care:**\n\n${info.description}\n\n**Available products:**\n${beautyProducts.map(item => `• ${item.name} - £${item.price.toFixed(2)}`).join('\n')}`,
         isUser: false,
         timestamp: new Date(),
-        hasActions: true,
         actions: [
-          { text: '🌶️ Browse Ethnic Foods', action: 'Ethnic Foods', type: 'category' },
-          { text: '🌾 View Dry Goods', action: 'Dry Goods', type: 'category' }
+          { text: '✨ Beauty & Care', action: 'Beauty & Personal Care', type: 'category' }
         ]
       };
     }
     
+    // Handle snacks requests
+    if (message.includes('snack') || message.includes('cereal') || message.includes('bread') || 
+        message.includes('breakfast') || message.includes('golden morn')) {
+      const info = productInfo['snacks'];
+      const snackProducts = getProductsByCategory('Snacks');
+      
+      return {
+        id: (Date.now() + 1).toString(),
+        text: `🍿 **Snacks & Breakfast:**\n\n${info.description}\n\n**Available products:**\n${snackProducts.map(item => `• ${item.name} - £${item.price.toFixed(2)}`).join('\n')}`,
+        isUser: false,
+        timestamp: new Date(),
+        actions: [
+          { text: '🍿 View Snacks', action: 'Snacks', type: 'category' }
+        ]
+      };
+    }
+
+    // Handle drinks requests
+    if (message.includes('drink') || message.includes('beverage') || message.includes('sorrel') || 
+        message.includes('juice') || message.includes('tea')) {
+      const info = productInfo['drinks'];
+      const drinkProducts = getProductsByCategory('Drinks');
+      
+      return {
+        id: (Date.now() + 1).toString(),
+        text: `🥤 **Drinks & Beverages:**\n\n${info.description}\n\n**Available products:**\n${drinkProducts.map(item => `• ${item.name} - £${item.price.toFixed(2)}`).join('\n')}`,
+        isUser: false,
+        timestamp: new Date(),
+        actions: [
+          { text: '🥤 View Drinks', action: 'Drinks', type: 'category' }
+        ]
+      };
+    }
+
     // Handle frozen requests
-    if (message.includes('frozen') || message.includes('freeze') || message.includes('ice') || 
-        message.includes('fridge') || message.includes('chilled')) {
-      const info = productInfo['frozen'];
+    if (message.includes('frozen') || message.includes('freeze') || message.includes('ice')) {
+      const info = productInfo['frozen proteins'];
+      const frozenProducts = getProductsByCategory('Frozen proteins');
+      
       return {
         id: (Date.now() + 1).toString(),
-        text: `🧊 **Frozen Proteins & Prepared Foods:**\n\n${info.description}\n\n**Available items:**\n${info.items.map(item => `• ${item}`).join('\n')}\n\nView our frozen section:`,
+        text: `🧊 **Frozen Proteins:**\n\n${info.description}\n\n**Available products:**\n${frozenProducts.map(item => `• ${item.name} - £${item.price.toFixed(2)}`).join('\n')}`,
         isUser: false,
         timestamp: new Date(),
-        hasActions: true,
         actions: [
-          { text: '🧊 Browse Frozen Proteins', action: 'Frozen proteins', type: 'category' },
-          { text: '🥩 Frozen Meat Selection', action: 'Frozen proteins', type: 'category' }
+          { text: '🧊 Frozen Proteins', action: 'Frozen proteins', type: 'category' }
         ]
       };
     }
@@ -280,20 +262,63 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
       };
     }
 
+    // Product search
+    if (message.includes('search') || message.includes('find') || message.includes('look for')) {
+      const searchTerm = message.replace(/search|find|look for/gi, '').trim();
+      if (searchTerm) {
+        const foundProducts = products.filter(product => 
+          product.name.toLowerCase().includes(searchTerm) ||
+          product.category.toLowerCase().includes(searchTerm) ||
+          product.description.toLowerCase().includes(searchTerm)
+        );
+        
+        if (foundProducts.length > 0) {
+          return {
+            id: (Date.now() + 1).toString(),
+            text: `🔍 **Search Results for "${searchTerm}":**\n\nFound ${foundProducts.length} products:\n\n${foundProducts.slice(0, 5).map(item => `• ${item.name} - £${item.price.toFixed(2)} (${item.category})`).join('\n')}${foundProducts.length > 5 ? `\n\n... and ${foundProducts.length - 5} more products` : ''}`,
+            isUser: false,
+            timestamp: new Date(),
+            actions: foundProducts.length > 0 ? [
+              { text: '🛒 Browse All', action: 'all', type: 'category' },
+              ...foundProducts.slice(0, 3).map(item => ({
+                text: item.name,
+                action: item.category,
+                type: 'category' as const
+              }))
+            ] : undefined
+          };
+        }
+      }
+    }
+
+    // Price inquiries
+    if (message.includes('price') || message.includes('cost') || message.includes('how much')) {
+      const priceProducts = products.slice(0, 6); // Show first 6 products with prices
+      return {
+        id: (Date.now() + 1).toString(),
+        text: `💰 **Current Product Prices:**\n\n${priceProducts.map(item => `• ${item.name} - £${item.price.toFixed(2)}`).join('\n')}\n\nWe offer competitive prices on all our authentic African and Caribbean products!`,
+        isUser: false,
+        timestamp: new Date(),
+        actions: [
+          { text: '🛒 View All Products', action: 'all', type: 'category' },
+          { text: '💰 Price Match', action: 'pricing_info', type: 'info' }
+        ]
+      };
+    }
+
     // Greetings
     if (message.includes('hello') || message.includes('hi') || message.includes('hey') || 
         message.includes('good morning') || message.includes('good afternoon') || 
         message.includes('good evening') || message.includes('greetings')) {
       return {
         id: (Date.now() + 1).toString(),
-        text: `👋 Hello and welcome to Nimi Store!\n\nI'm here to help you find authentic African and Caribbean groceries. You can browse our categories or ask me specific questions.\n\nWhat would you like to explore today?`,
+        text: `👋 Hello and welcome to Nimi Store!\n\nI'm here to help you find authentic African and Caribbean groceries. We have ${products.length} products across ${allCategories.length} categories.\n\nWhat would you like to explore today?`,
         isUser: false,
         timestamp: new Date(),
-        hasActions: true,
         actions: [
           { text: '🛒 Browse All Categories', action: 'browse_categories', type: 'info' },
-          { text: '🥩 Show Me Meat Products', action: 'Meat, Fish & Poultry', type: 'category' },
-          { text: '🥬 Fresh Produce', action: 'Fresh Food', type: 'category' }
+          { text: '🥩 Meat & Fish', action: 'Meat, Fish & Poultry', type: 'category' },
+          { text: '✨ Beauty Products', action: 'Beauty & Personal Care', type: 'category' }
         ]
       };
     }
@@ -302,10 +327,9 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
     if (message.includes('thank') || message.includes('thanks') || message.includes('appreciate')) {
       return {
         id: (Date.now() + 1).toString(),
-        text: `You're very welcome! 😊 Is there anything else I can help you with today?`,
+        text: `You're very welcome! 😊 Is there anything else I can help you find in our ${products.length} products?`,
         isUser: false,
         timestamp: new Date(),
-        hasActions: true,
         actions: [
           { text: '🛒 Continue Shopping', action: 'browse_categories', type: 'info' },
           { text: '📍 Store Information', action: 'store_info', type: 'info' },
@@ -317,15 +341,14 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
     // Default response with actions
     return {
       id: (Date.now() + 1).toString(),
-      text: `I'd love to help you find what you're looking for! 😊\n\n**Popular sections to explore:**\n🥩 Meat, Fish & Poultry\n🥬 Fresh Produce\n🌶️ Ethnic Foods & Spices\n🧊 Frozen Proteins\n🥤 African Drinks\n\nWhat would you like to see?`,
+      text: `I'd love to help you find what you're looking for! 😊\n\nWe have ${products.length} authentic African and Caribbean products available. You can:\n\n• Browse by category\n• Search for specific items\n• Ask about prices\n• Get store information\n\nWhat would you like to see?`,
       isUser: false,
       timestamp: new Date(),
-      hasActions: true,
       actions: [
         { text: '🛒 Browse All Categories', action: 'browse_categories', type: 'info' },
-        { text: '🥩 Meat & Fish', action: 'Meat, Fish & Poultry', type: 'category' },
-        { text: '🥬 Fresh Produce', action: 'Fresh Food', type: 'category' },
-        { text: '🌶️ Ethnic Foods', action: 'Ethnic Foods', type: 'category' }
+        { text: '🥬 Fresh Food', action: 'Fresh Food', type: 'category' },
+        { text: '✨ Beauty & Care', action: 'Beauty & Personal Care', type: 'category' },
+        { text: '🍿 Snacks', action: 'Snacks', type: 'category' }
       ]
     };
   };
@@ -333,10 +356,9 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
   const handleActionClick = (action: string, type: string) => {
     if (type === 'category' && onCategoryClick) {
       onCategoryClick(action);
-      // Add a message to show the action was taken
       const actionMessage: Message = {
         id: Date.now().toString(),
-        text: `Taking you to our ${action} section...`,
+        text: `Taking you to our ${action} section with ${getProductsByCategory(action).length} products...`,
         isUser: false,
         timestamp: new Date()
       };
@@ -350,10 +372,12 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
     } else if (action === 'delivery_info') {
       const deliveryMessage = getEnhancedResponse('delivery information');
       setMessages(prev => [...prev, deliveryMessage]);
+    } else if (action === 'pricing_info') {
+      const pricingMessage = getEnhancedResponse('price information');
+      setMessages(prev => [...prev, pricingMessage]);
     }
   };
 
-  // Rest of the component remains the same...
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
@@ -369,7 +393,6 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate typing delay
     setTimeout(() => {
       const botResponse = getEnhancedResponse(currentInput);
       setMessages(prev => [...prev, botResponse]);
@@ -422,7 +445,7 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
             </div>
             <div>
               <h3 className="font-semibold">Nimi Store Assistant</h3>
-              <p className="text-xs opacity-90">Online • Ready to help</p>
+              <p className="text-xs opacity-90">{products.length} products • Ready to help</p>
             </div>
           </div>
 
@@ -457,7 +480,7 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
                 </div>
                 
                 {/* Action Buttons */}
-                {message.hasActions && message.actions && (
+                {message.actions && message.actions.length > 0 && (
                   <div className="mt-2 ml-8 flex flex-wrap gap-2">
                     {message.actions.map((action, index) => (
                       <button

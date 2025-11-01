@@ -1,8 +1,8 @@
-import React from 'react';
-import { ShoppingCart, Star, Eye } from 'lucide-react';
-import { Product } from '../context/CartContext';
-import { useCart } from '../context/CartContext';
-import image from '../images/nimi.png';
+import React from "react";
+import { ShoppingCart, Star, Eye } from "lucide-react";
+import { Product } from "../context/CartContext";
+import { useCart } from "../context/CartContext";
+import image from "../images/nimi.png";
 
 interface ProductCardProps {
   product: Product;
@@ -10,7 +10,11 @@ interface ProductCardProps {
   onViewClick?: (product: Product) => void;
 }
 
-export default function ProductCard({ product, onProductClick, onViewClick }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  onProductClick,
+  onViewClick,
+}: ProductCardProps) {
   const { addItem } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -36,20 +40,21 @@ export default function ProductCard({ product, onProductClick, onViewClick }: Pr
   const productRating = (product as any).rating || 4.0;
 
   return (
-    <div 
-      className="rounded-lg overflow-hidden cursor-pointer relative group h-60 bg-gray-100"
+    <div
+      className="rounded-lg overflow-hidden cursor-pointer relative group w-65 h-60 bg-gray-100"
       onClick={handleCardClick}
     >
       {/* Product Image - Full card */}
       <div className="relative w-full h-full">
         <img
-  src={image.src}  // Use .src property
-  alt={product.name}
-  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-  onError={(e) => {
-    e.currentTarget.src = '';
-  }}
-/>
+          src={product.image} // Use the product's image property
+          alt={product.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          onError={(e) => {
+            e.currentTarget.src = "/fallback-image.jpg"; // Add a fallback
+          }}
+        />
+
         {!product.inStock && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -57,7 +62,7 @@ export default function ProductCard({ product, onProductClick, onViewClick }: Pr
             </span>
           </div>
         )}
-        
+
         {/* View Button - appears on hover */}
         <button
           onClick={handleViewClick}
@@ -79,8 +84,8 @@ export default function ProductCard({ product, onProductClick, onViewClick }: Pr
           disabled={!product.inStock}
           className={`absolute bottom-2 right-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-1 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 ${
             product.inStock
-              ? 'bg-emerald-600 text-white hover:bg-emerald-700'
-              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              ? "bg-emerald-600 text-white hover:bg-emerald-700"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
           }`}
         >
           <ShoppingCart size={14} />

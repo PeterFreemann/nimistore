@@ -24,7 +24,7 @@ export default function CategoryPage({ category, onProductClick, onViewClick }: 
 
   // Category mapping to match header component
   const categoryMapping = [
-    { name: 'Fresh Farm Produce', category: 'Fresh Food' },
+    { name: 'Fresh Food', category: 'Fresh Food' },
     { name: 'Frozen Proteins', category: 'Frozen proteins' },
     { name: 'African Soft Drinks', category: 'Drinks' },
     { name: 'Fruit Wine', category: 'Wine' },

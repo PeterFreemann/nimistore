@@ -129,18 +129,19 @@ export async function POST(req: NextRequest) {
     }
 
     const params: Stripe.Checkout.SessionCreateParams = {
-      submit_type: 'pay',
-      mode: 'payment',
-      payment_method_types: ['card'],
-      billing_address_collection: 'auto',
-      line_items: lineItems,
-      success_url: `${req.nextUrl.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.nextUrl.origin}/checkout`,
-      metadata: {
-        deliveryMethod: deliveryMethod,
-        orderTotal: total.toString(),
-      },
-    };
+  submit_type: 'pay',
+  mode: 'payment',
+  payment_method_types: ['card'],
+  billing_address_collection: 'auto',
+  line_items: lineItems,
+  success_url: `${req.nextUrl.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
+  cancel_url: `${req.nextUrl.origin}/checkout`,
+  metadata: {
+    deliveryMethod: deliveryMethod,
+    orderTotal: total.toString(),
+  },
+};
+
 
     // Only add shipping options for delivery orders
     if (deliveryMethod === 'delivery') {

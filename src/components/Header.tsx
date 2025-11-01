@@ -29,7 +29,7 @@ interface MainNavItem {
   hasDropdown?: boolean;
 }
 
-type HeroImageKey = 'Fresh Food' | 'Frozen proteins' | 'Drinks' | 'Wine' | 'Snacks';
+type HeroImageKey = 'Fresh Food' | 'Frozen proteins' | 'Drinks' | 'Wine' | 'Snacks' | 'Beauty & Personal Care';
 
 export default function Header({ currentPage, onPageChange, onSearch, selectedCategory }: HeaderProps): React.JSX.Element {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -51,6 +51,7 @@ export default function Header({ currentPage, onPageChange, onSearch, selectedCa
     'Drinks': drinkshero,
     'Wine': fruitwinehero,
     'Snacks': snackshero,
+    'Beauty & Personal Care': snackshero, // Placeholder image
   };
 
   // Function to get hero image for current page/category
@@ -76,11 +77,12 @@ export default function Header({ currentPage, onPageChange, onSearch, selectedCa
 
   // Category items for dropdown
   const categoryItems: CategoryItem[] = [
-    { name: 'Fresh Farm Produce', category: 'Fresh Food' },
+    { name: 'Fresh Food', category: 'Fresh Food' },
     { name: 'Frozen Proteins', category: 'Frozen proteins' },
     { name: 'African Soft Drinks', category: 'Drinks' },
     { name: 'Fruit Wine', category: 'Wine' },
     { name: 'Snacks', category: 'Snacks' },
+    { name: 'Beauty & Personal Care', category: 'Beauty & Personal Care' },
   ];
 
   const currentHeroImage = getCurrentHeroImage();
