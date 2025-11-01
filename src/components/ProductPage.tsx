@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Copy, Check, Facebook, Twitter, MessageCircle } from 'lucide-react';
 import { Product } from '../context/CartContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
@@ -15,6 +15,8 @@ interface ProductPageProps {
 export default function ProductPage({ product, onBackClick, onProductClick, onCategoryClick }: ProductPageProps) {
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { addItem } = useCart();
 
   // Scroll to top when component mounts or product changes
@@ -26,6 +28,111 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
     for (let i = 0; i < quantity; i++) {
       addItem(product);
     }
+  };
+
+  // Get current page URL for sharing - FIXED VERSION
+  const getShareUrl = () => {
+    if (typeof window !== 'undefined') {
+      // Since this is a single-page app, we'll use the current URL
+      // and add the product as a query parameter
+      const baseUrl = window.location.origin + window.location.pathname;
+      const params = new URLSearchParams();
+      params.set('product', product.id);
+      params.set('name', encodeURIComponent(product.name));
+      return `${baseUrl}?${params.toString()}`;
+    }
+    return '';
+  };
+
+  // Alternative: Simple current URL (most reliable)
+  const getSimpleShareUrl = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.href;
+    }
+    return '';
+  };
+
+  // Share functionality
+  const handleShare = async () => {
+    const shareUrl = getSimpleShareUrl(); // Use simple URL
+    const shareText = `Check out ${product.name} on NimiStore - £${product.price.toFixed(2)}`;
+
+    console.log('Sharing URL:', shareUrl); // Debug log
+
+    // Check if Web Share API is available (mobile devices)
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.name,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (error) {
+        // User cancelled the share or something went wrong
+        console.log('Share cancelled:', error);
+        // Fallback to custom share modal
+        setShowShareModal(true);
+      }
+    } else {
+      // Fallback: Show custom share modal
+      setShowShareModal(true);
+    }
+  };
+
+  // Copy link to clipboard
+  const copyToClipboard = async () => {
+    const shareUrl = getSimpleShareUrl(); // Use simple URL
+    console.log('Copying URL:', shareUrl); // Debug log
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.log('Clipboard API failed, using fallback:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = shareUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  // Share on social media
+  const shareOnSocialMedia = (platform: string) => {
+    const shareUrl = getSimpleShareUrl(); // Use simple URL
+    const shareText = `Check out ${product.name} on NimiStore - £${product.price.toFixed(2)}`;
+    const encodedText = encodeURIComponent(shareText);
+    const encodedUrl = encodeURIComponent(shareUrl);
+
+    console.log(`Sharing to ${platform}:`, shareUrl); // Debug log
+
+    const urls = {
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`,
+      twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+      whatsapp: `https://wa.me/?text=${encodedText}%20${encodedUrl}`
+    };
+
+    if (urls[platform as keyof typeof urls]) {
+      window.open(
+        urls[platform as keyof typeof urls],
+        '_blank',
+        'width=600,height=400'
+      );
+    }
+  };
+
+  // Share via email
+  const shareViaEmail = () => {
+    const shareUrl = getSimpleShareUrl(); // Use simple URL
+    const subject = `Check out ${product.name} on NimiStore`;
+    const body = `I thought you might be interested in this product:\n\n${product.name}\nPrice: £${product.price.toFixed(2)}\n${product.description ? `Description: ${product.description}\n` : ''}\nView it here: ${shareUrl}`;
+    
+    window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   // Get related products from the same category
@@ -210,12 +317,10 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                     <span>Add to Cart</span>
                   </button>
                   
-                  {/* <button className="flex items-center justify-center space-x-2 py-3 px-6 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <Heart size={20} />
-                    <span>Wishlist</span>
-                  </button> */}
-                  
-                  <button className="flex items-center justify-center space-x-2 py-3 px-6 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button 
+                    onClick={handleShare}
+                    className="flex items-center justify-center space-x-2 py-3 px-6 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
                     <Share2 size={20} />
                     <span>Share</span>
                   </button>
@@ -242,6 +347,83 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
             </div>
           </div>
         </div>
+
+        {/* Share Modal */}
+        {showShareModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg max-w-md w-full p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Share this product</h3>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  ×
+                </button>
+              </div>
+              
+              <div className="mb-4">
+                <p className="text-sm text-gray-600 mb-2">Share this product with friends and family</p>
+                <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
+                  <input
+                    type="text"
+                    value={getSimpleShareUrl()}
+                    readOnly
+                    className="flex-1 bg-transparent text-sm text-gray-600 outline-none truncate"
+                  />
+                  <button
+                    onClick={copyToClipboard}
+                    className="flex items-center space-x-1 px-3 py-1 bg-emerald-600 text-white rounded text-sm hover:bg-emerald-700 transition-colors"
+                  >
+                    {copied ? <Check size={14} /> : <Copy size={14} />}
+                    <span>{copied ? 'Copied!' : 'Copy'}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-4 gap-3 mb-4">
+                <button
+                  onClick={() => shareOnSocialMedia('facebook')}
+                  className="flex flex-col items-center space-y-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  <Facebook size={20} />
+                  <span className="text-xs">Facebook</span>
+                </button>
+                
+                <button
+                  onClick={() => shareOnSocialMedia('twitter')}
+                  className="flex flex-col items-center space-y-2 p-3 bg-blue-400 text-white rounded-lg hover:bg-blue-500 transition-colors"
+                >
+                  <Twitter size={20} />
+                  <span className="text-xs">Twitter</span>
+                </button>
+                
+                <button
+                  onClick={() => shareOnSocialMedia('whatsapp')}
+                  className="flex flex-col items-center space-y-2 p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                >
+                  <MessageCircle size={20} />
+                  <span className="text-xs">WhatsApp</span>
+                </button>
+                
+                <button
+                  onClick={shareViaEmail}
+                  className="flex flex-col items-center space-y-2 p-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                >
+                  <MessageCircle size={20} />
+                  <span className="text-xs">Email</span>
+                </button>
+              </div>
+
+              <button
+                onClick={() => setShowShareModal(false)}
+                className="w-full py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Reviews Section */}
         <div className="bg-white rounded-lg shadow-md mt-8 p-8">
