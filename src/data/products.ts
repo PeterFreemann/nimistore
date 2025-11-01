@@ -35,18 +35,21 @@ const image14 = '/yam.png';
 const image15 = '/pepper.png';
  const image16 = '/bread.jpeg';
  const image17 = '/goldenmorn.jpeg';
- const image18 = '/broom.jpeg';
+ const image18 = '/brooms.png';
  const image19 = '/Aboniki.png';
 const image20 = '/flower.jpeg';
-const image21 = '/tetmosol.jpeg';
+const image21 = '/tetmosol.png';
 const image22 = '/tura.jpeg';
 const image23 = '/okro.jpeg';
 const image24 = '/efor.png';
 const image25 = '/milo.png';
 const image26 = '/bournvita.png';
-const image27 = '/pap.jpeg';
-const image28 = '/dryfish.jpeg';
+const image27 = '/pap.png';
+const image28 = '/dryfish.png';
 const image29 = '/custard.png';
+const image30 = '/derica.png';
+const image31 = '/gino.png';
+
 
 
 export const products: Product[] = [
@@ -170,7 +173,7 @@ export const products: Product[] = [
     inStock: true,
     weight: '1.5kg'
   },
-  { id: '55',
+  { id: '15',
     name: 'Pepper',
     price: 6.99,
     image: image15,
@@ -306,6 +309,16 @@ export const products: Product[] = [
     inStock: true,
     weight: '250g'
   },
+  { id: '30',
+    name: 'Gino',
+    price: 3.59,
+    image: image31,
+    category: '',
+    description: 'Custard',
+    inStock: true,
+    weight: '250g'
+  },
+  
   
 
 
