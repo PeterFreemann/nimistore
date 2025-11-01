@@ -41,11 +41,11 @@ export default function ProductCard({
 
   return (
     <div
-      className="rounded-lg overflow-hidden cursor-pointer relative group w-65 h-60 bg-gray-100 bg-white"
+      className="rounded-lg overflow-hidden cursor-pointer relative group w-65 bg-white shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
       onClick={handleCardClick}
     >
-      {/* Product Image - Fixed container */}
-      <div className="relative w-full h-full flex items-center justify-center p-4">
+      {/* Product Image Container */}
+      <div className="relative w-full h-48 flex items-center justify-center bg-gray-50 p-4">
         <img
           src={product.image}
           alt={product.name}
@@ -55,6 +55,7 @@ export default function ProductCard({
           }}
         />
 
+        {/* Stock Status Badge */}
         {!product.inStock && (
           <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -70,27 +71,39 @@ export default function ProductCard({
         >
           <Eye size={16} className="text-gray-700" />
         </button>
+      </div>
 
-        {/* Product Name - appears on hover at bottom left */}
-        <div className="absolute bottom-2 left-2 bg-black bg-opacity-70 text-white px-3 py-2 rounded-md opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-          <h3 className="font-semibold text-sm line-clamp-2 max-w-48">
-            {product.name}
-          </h3>
+      {/* Product Info - Always Visible */}
+      <div className="p-4">
+        {/* Product Name - Always Visible */}
+        <h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 leading-tight">
+          {product.name}
+        </h3>
+
+        {/* Price and Add to Cart Button - Always Visible */}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-lg font-bold text-emerald-600">
+              £{product.price.toFixed(2)}
+            </span>
+            {product.weight && (
+              <span className="text-xs text-gray-500">{product.weight}</span>
+            )}
+          </div>
+          
+          <button
+            onClick={handleAddToCart}
+            disabled={!product.inStock}
+            className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              product.inStock
+                ? "bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm hover:shadow-md"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            <ShoppingCart size={14} />
+            <span>Add</span>
+          </button>
         </div>
-
-        {/* Add to Cart Button - appears on hover at bottom */}
-        <button
-          onClick={handleAddToCart}
-          disabled={!product.inStock}
-          className={`absolute bottom-2 right-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 flex items-center gap-1 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 ${
-            product.inStock
-              ? "bg-emerald-600 text-white hover:bg-emerald-700"
-              : "bg-gray-300 text-gray-500 cursor-not-allowed"
-          }`}
-        >
-          <ShoppingCart size={14} />
-          Add
-        </button>
       </div>
     </div>
   );
