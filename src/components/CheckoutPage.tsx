@@ -133,7 +133,6 @@ export default function CheckoutPage({ onOrderComplete }: CheckoutPageProps) {
       setFormErrors([`Payment failed: ${errorMessage}. Please try again.`]);
     }
   };
-
   // If cart is empty, show empty state
   if (items.length === 0) {
     return (
@@ -156,7 +155,6 @@ export default function CheckoutPage({ onOrderComplete }: CheckoutPageProps) {
       </div>
     );
   }
-
   return (
     <div className="min-h-screen bg-gray-50 text-black">
       <div className="max-w-7xl mx-auto px-4 py-8">
