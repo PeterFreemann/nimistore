@@ -1,49 +1,24 @@
-'use client';
+"use client";
 
-import React from 'react'
+import React from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
-import ContactUs from '@/components/Contactus';
+import Header from '../../components/Header';
+import ContactUs from '../../components/Contactus';
+import Footer from '../../components/Footer';
 
-export default function page() {
+export default function ContactPage() {
   const router = useRouter();
 
-  const handlePageChange = (page: string) => {
-    // Map the page names to actual routes
-    const routeMap: { [key: string]: string } = {
-      'home': '/',
-      'shop-all': '/shop',
-      'about': '/about',
-      'contact': '/contact-us',
-      'how-it-works': '/how-it-works',
-      'cart': '/cart',
-    };
-
-    // Handle category pages
-    if (page.startsWith('category-')) {
-      const category = page.replace('category-', '');
-      router.push(`/category/${category}`);
-    } else {
-      const route = routeMap[page] || `/${page}`;
-      router.push(route);
-    }
-  };
-
-  const handleSearch = (query: string) => {
-    // Redirect to search page with query parameter
-    router.push(`/search?q=${encodeURIComponent(query)}`);
+  const handleCategoryClick = (category: string) => {
+    const slug = category.toLowerCase().replace(/\s+/g, '-');
+    router.push(`/category/${slug}`);
   };
 
   return (
-    <div>
-      <Header 
-        currentPage="contact"
-        onPageChange={handlePageChange}
-        onSearch={handleSearch}
-      />
-      
-      {/* Add your contact us content here */}
+    <div className="min-h-screen">
+      <Header />
       <ContactUs />
+      <Footer onCategoryClick={handleCategoryClick} />
     </div>
-  )
+  );
 }

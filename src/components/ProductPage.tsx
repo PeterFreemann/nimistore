@@ -1,15 +1,17 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Copy, Check, Facebook, Twitter, MessageCircle } from 'lucide-react';
 import { Product } from '../context/CartContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
-import { products } from '../data/products'; // Import your products data
+import { products } from '../data/products';
 
 interface ProductPageProps {
   product: Product;
   onBackClick: () => void;
   onProductClick?: (product: Product) => void;
-  onCategoryClick?: (category: string) => void; // Add this prop
+  onCategoryClick?: (category: string) => void;
 }
 
 export default function ProductPage({ product, onBackClick, onProductClick, onCategoryClick }: ProductPageProps) {
@@ -18,6 +20,9 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
   const [showShareModal, setShowShareModal] = useState(false);
   const [copied, setCopied] = useState(false);
   const { addItem } = useCart();
+
+  // Calculate total price based on quantity
+  const totalPrice = product.price * quantity;
 
   // Scroll to top when component mounts or product changes
   useEffect(() => {
@@ -30,22 +35,16 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
     }
   };
 
-  // Get current page URL for sharing - FIXED VERSION
-  const getShareUrl = () => {
-    if (typeof window !== 'undefined') {
-      // Since this is a single-page app, we'll use the current URL
-      // and add the product as a query parameter
-      const baseUrl = window.location.origin + window.location.pathname;
-      const params = new URLSearchParams();
-      params.set('product', product.id);
-      params.set('name', encodeURIComponent(product.name));
-      return `${baseUrl}?${params.toString()}`;
-    }
-    return '';
+  const handleQuantityIncrease = () => {
+    setQuantity(prev => prev + 1);
   };
 
-  // Alternative: Simple current URL (most reliable)
-  const getSimpleShareUrl = () => {
+  const handleQuantityDecrease = () => {
+    setQuantity(prev => Math.max(1, prev - 1));
+  };
+
+  // Get current page URL for sharing
+  const getShareUrl = () => {
     if (typeof window !== 'undefined') {
       return window.location.href;
     }
@@ -54,12 +53,9 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
 
   // Share functionality
   const handleShare = async () => {
-    const shareUrl = getSimpleShareUrl(); // Use simple URL
+    const shareUrl = getShareUrl();
     const shareText = `Check out ${product.name} on NimiStore - £${product.price.toFixed(2)}`;
 
-    console.log('Sharing URL:', shareUrl); // Debug log
-
-    // Check if Web Share API is available (mobile devices)
     if (navigator.share) {
       try {
         await navigator.share({
@@ -68,29 +64,21 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
           url: shareUrl,
         });
       } catch (error) {
-        // User cancelled the share or something went wrong
-        console.log('Share cancelled:', error);
-        // Fallback to custom share modal
         setShowShareModal(true);
       }
     } else {
-      // Fallback: Show custom share modal
       setShowShareModal(true);
     }
   };
 
   // Copy link to clipboard
   const copyToClipboard = async () => {
-    const shareUrl = getSimpleShareUrl(); // Use simple URL
-    console.log('Copying URL:', shareUrl); // Debug log
-    
+    const shareUrl = getShareUrl();
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.log('Clipboard API failed, using fallback:', err);
-      // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = shareUrl;
       document.body.appendChild(textArea);
@@ -104,12 +92,10 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
 
   // Share on social media
   const shareOnSocialMedia = (platform: string) => {
-    const shareUrl = getSimpleShareUrl(); // Use simple URL
+    const shareUrl = getShareUrl();
     const shareText = `Check out ${product.name} on NimiStore - £${product.price.toFixed(2)}`;
     const encodedText = encodeURIComponent(shareText);
     const encodedUrl = encodeURIComponent(shareUrl);
-
-    console.log(`Sharing to ${platform}:`, shareUrl); // Debug log
 
     const urls = {
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedText}`,
@@ -128,7 +114,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
 
   // Share via email
   const shareViaEmail = () => {
-    const shareUrl = getSimpleShareUrl(); // Use simple URL
+    const shareUrl = getShareUrl();
     const subject = `Check out ${product.name} on NimiStore`;
     const body = `I thought you might be interested in this product:\n\n${product.name}\nPrice: £${product.price.toFixed(2)}\n${product.description ? `Description: ${product.description}\n` : ''}\nView it here: ${shareUrl}`;
     
@@ -139,15 +125,11 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
   const getRelatedProducts = () => {
     if (!product.category) return [];
     
-    // Filter products by same category, excluding the current product
     const relatedProducts = products.filter(p => 
       p.category === product.category && p.id !== product.id
     );
     
-    // If there are fewer than 4 products in the same category, 
-    // add some from similar categories or random products
     if (relatedProducts.length < 4) {
-      // Get products from similar categories
       const similarCategories = getSimilarCategories(product.category);
       const similarProducts = products.filter(p => 
         similarCategories.includes(p.category) && 
@@ -155,7 +137,6 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
         !relatedProducts.some(rp => rp.id === p.id)
       );
       
-      // Combine and limit to 6 products max
       return [...relatedProducts, ...similarProducts].slice(0, 6);
     }
     
@@ -183,14 +164,12 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
   // Handle view more related products - navigate to category page
   const handleViewMoreRelated = () => {
     if (onCategoryClick && product.category) {
-      // Use the same pattern as your header navigation
-      // The header expects category pages in the format 'category-{categoryName}'
-      onCategoryClick(`category-${product.category}`);
+      onCategoryClick(product.category);
     }
   };
 
   const relatedProducts = getRelatedProducts();
-  const productImages = [product.image, product.image, product.image]; // Simulate multiple images
+  const productImages = [product.image, product.image, product.image];
 
   // Single handler for related product clicks
   const handleRelatedProductClick = (relatedProduct: Product) => {
@@ -261,11 +240,20 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                 </div>
               </div>
 
-              {/* Price */}
+              {/* Price - Updated to show total price */}
               <div className="mb-6">
-                <span className="text-3xl font-bold text-emerald-600">£{product.price.toFixed(2)}</span>
+                <div className="flex items-center gap-4 mb-2">
+                  <span className="text-3xl font-bold text-emerald-600">
+                    £{totalPrice.toFixed(2)}
+                  </span>
+                  {quantity > 1 && (
+                    <span className="text-sm text-gray-500">
+                      (£{product.price.toFixed(2)} each)
+                    </span>
+                  )}
+                </div>
                 {product.weight && (
-                  <span className="text-gray-600 ml-2">per {product.weight}</span>
+                  <span className="text-gray-600">per {product.weight}</span>
                 )}
                 <div className={`inline-block ml-4 px-3 py-1 rounded-full text-sm ${
                   product.inStock 
@@ -282,25 +270,31 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                 <p className="text-gray-600">{product.description}</p>
               </div>
 
-              {/* Quantity and Add to Cart */}
+              {/* Quantity and Add to Cart - Updated with better quantity controls */}
               <div className="mb-6 text-black">
                 <div className="flex items-center space-x-4 mb-4">
                   <label className="text-sm font-medium text-gray-700">Quantity:</label>
                   <div className="flex items-center border border-gray-300 rounded-lg">
                     <button
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-3 py-2 text-gray-600 hover:text-gray-900"
+                      onClick={handleQuantityDecrease}
+                      disabled={quantity <= 1}
+                      className="px-4 py-2 text-gray-600 hover:text-gray-900 disabled:text-gray-300 disabled:cursor-not-allowed transition-colors"
                     >
                       -
                     </button>
-                    <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
+                    <span className="px-4 py-2 border-x border-gray-300 min-w-12 text-center font-medium">
+                      {quantity}
+                    </span>
                     <button
-                      onClick={() => setQuantity(quantity + 1)}
-                      className="px-3 py-2 text-gray-600 hover:text-gray-900"
+                      onClick={handleQuantityIncrease}
+                      className="px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
                     >
                       +
                     </button>
                   </div>
+                  <span className="text-sm text-gray-500">
+                    {quantity} item{quantity !== 1 ? 's' : ''} selected
+                  </span>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 text-black">
@@ -314,7 +308,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                     }`}
                   >
                     <ShoppingCart size={20} />
-                    <span>Add to Cart</span>
+                    <span>Add {quantity} to Cart - £{totalPrice.toFixed(2)}</span>
                   </button>
                   
                   <button 
@@ -367,7 +361,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                 <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
                   <input
                     type="text"
-                    value={getSimpleShareUrl()}
+                    value={getShareUrl()}
                     readOnly
                     className="flex-1 bg-transparent text-sm text-gray-600 outline-none truncate"
                   />

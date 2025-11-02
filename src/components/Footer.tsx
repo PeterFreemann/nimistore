@@ -1,12 +1,12 @@
 import React from 'react';
+import Link from 'next/link';
 import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from 'lucide-react';
 
 interface FooterProps {
-  onPageChange: (page: string) => void;
-  onCategoryClick: (category: string) => void;
+  onCategoryClick?: (category: string) => void;
 }
 
-export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
+export default function Footer({ onCategoryClick }: FooterProps) {
   return (
     <footer className="bg-green-800 text-white">
       {/* Newsletter Section */}
@@ -57,61 +57,28 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
               <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-2">
                 <li>
-                  <button 
-                    onClick={() => onPageChange('about')}
+                  <Link 
+                    href="/about"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     About Us
-                  </button>
+                  </Link>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => onPageChange('contact')}
+                  <Link 
+                    href="/contact"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Contact Us
-                  </button>
+                  </Link>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => onPageChange('how-it-works')}
+                  <Link 
+                    href="/how-it-works"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     How it works
-                  </button>
-                </li>
-                <li>
-                  {/* <button 
-                    onClick={() => {
-                      // You can create a FAQ page or show FAQ modal
-                      console.log('FAQ clicked');
-                    }}
-                    className="text-green-100 hover:text-white transition-colors text-left"
-                  >
-                    FAQ
-                  </button> */}
-                </li>
-                <li>
-                  {/* <button 
-                    onClick={() => {
-                      // You can create a delivery page or show delivery info modal
-                      console.log('Delivery & Returns clicked');
-                    }}
-                    className="text-green-100 hover:text-white transition-colors text-left"
-                  >
-                    Delivery & Returns
-                  </button> */}
-                </li>
-                <li>
-                  {/* <button 
-                    onClick={() => {
-                      // You can create a order tracking page
-                      console.log('Track Your Order clicked');
-                    }}
-                    className="text-green-100 hover:text-white transition-colors text-left"
-                  >
-                    Track Your Order
-                  </button> */}
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -121,44 +88,44 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
               <h4 className="text-lg font-semibold mb-4">Categories</h4>
               <ul className="space-y-2">
                 <li>
-                  <button 
-                    onClick={() => onCategoryClick('Fresh Food')}
+                  <Link 
+                    href="/category/fresh-food"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Fresh Food
-                  </button>
+                  </Link>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => onCategoryClick('Fruit Wine')}
+                  <Link 
+                    href="/category/wine"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Fruit Wine
-                  </button>
+                  </Link>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => onCategoryClick('Frozen proteins')}
+                  <Link 
+                    href="/category/frozen-proteins"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Frozen Proteins
-                  </button>
+                  </Link>
                 </li>
                 <li>
-                  <button 
-                    onClick={() => onCategoryClick('Drinks')}
+                  <Link 
+                    href="/category/drinks"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     African Soft Drinks
-                  </button>
+                  </Link>
                 </li>
-                 <li>
-                  <button 
-                    onClick={() => onCategoryClick('Beauty & Personal Care')}
+                <li>
+                  <Link 
+                    href="/category/beauty"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Beauty and Personal Care
-                  </button>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -218,31 +185,13 @@ export default function Footer({ onPageChange, onCategoryClick }: FooterProps) {
               © 2025 Nimi Store. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm">
-              <button 
-                onClick={() => {
-                  // You can create privacy policy page or modal
-                  console.log('Privacy Policy clicked');
-                }}
-                className="text-green-100 hover:text-white transition-colors"
-              >
+              <button className="text-green-100 hover:text-white transition-colors">
                 Privacy Policy
               </button>
-              <button 
-                onClick={() => {
-                  // You can create terms page or modal
-                  console.log('Terms & Conditions clicked');
-                }}
-                className="text-green-100 hover:text-white transition-colors"
-              >
+              <button className="text-green-100 hover:text-white transition-colors">
                 Terms & Conditions
               </button>
-              <button 
-                onClick={() => {
-                  // You can create refund policy page or modal
-                  console.log('Refund Policy clicked');
-                }}
-                className="text-green-100 hover:text-white transition-colors"
-              >
+              <button className="text-green-100 hover:text-white transition-colors">
                 Refund Policy
               </button>
             </div>

@@ -1,6 +1,9 @@
+'use client';
+
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import ProductModal from './ProductModal';
-import Chatbot from './chatbot'; // Make sure this file exists!
+import Chatbot from './chatbot';
 import { 
   groceriesProducts, 
   ethnicFoodsProducts, 
@@ -21,7 +24,7 @@ import Testimonials from './Testimonials';
 import Ads from './Ads';
 
 // Import the new combined section
-import CombinedCategorySection from './CombinedCategorySectio';
+import CombinedCategorySection from '../components/CombinedCategorySectio';
 
 interface HomePageProps {
   onProductClick: (product: Product) => void;
@@ -31,6 +34,7 @@ interface HomePageProps {
 export default function HomePage({ onProductClick, onCategoryClick }: HomePageProps) {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
 
   // Handle product view modal
   const handleProductView = (product: Product) => {

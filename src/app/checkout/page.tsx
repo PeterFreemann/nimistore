@@ -3,11 +3,16 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../../components/Header';
-import HowItWorks from '../../components/HowItWorks';
+import CheckoutPage from '../../components/CheckoutPage';
 import Footer from '../../components/Footer';
 
-export default function HowItWorksPage() {
+export default function CheckoutRoute() {
   const router = useRouter();
+
+  const handleOrderComplete = () => {
+    // Navigate to success page after order completion
+    router.push('/success');
+  };
 
   const handleCategoryClick = (category: string) => {
     const slug = category.toLowerCase().replace(/\s+/g, '-');
@@ -17,7 +22,7 @@ export default function HowItWorksPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <HowItWorks />
+      <CheckoutPage onOrderComplete={handleOrderComplete} />
       <Footer onCategoryClick={handleCategoryClick} />
     </div>
   );
