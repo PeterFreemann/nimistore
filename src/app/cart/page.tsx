@@ -3,11 +3,19 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Header from '../../components/Header';
-import HowItWorks from '../../components/HowItWorks';
+import CartPage from '../../components/CartPage';
 import Footer from '../../components/Footer';
 
-export default function HowItWorksPage() {
+export default function CartRoute() {
   const router = useRouter();
+
+  const handleCheckoutClick = () => {
+    router.push('/checkout');
+  };
+
+  const handleContinueShopping = () => {
+    router.push('/');
+  };
 
   const handleCategoryClick = (category: string) => {
     const slug = category.toLowerCase().replace(/\s+/g, '-');
@@ -17,7 +25,10 @@ export default function HowItWorksPage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <HowItWorks />
+      <CartPage 
+        onCheckoutClick={handleCheckoutClick}
+        onContinueShoppingClick={handleContinueShopping}
+      />
       <Footer onCategoryClick={handleCategoryClick} />
     </div>
   );
