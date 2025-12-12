@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Copy, Check, Facebook, Twitter, MessageCircle } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Share2, Truck, Shield, RotateCcw, ChevronLeft, ChevronRight, Copy, Check, Facebook, Twitter, MessageCircle, Clock } from 'lucide-react';
 import { Product } from '../context/CartContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
@@ -21,165 +21,8 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
   const [copied, setCopied] = useState(false);
   const { addItem } = useCart();
 
-  // Add this code temporarily in your ProductPage component or run in browser console
-const checkProducts = () => {
-  console.log('=== CHECKING ALL PRODUCTS ===');
-  
-  // Get all Beauty & Personal Care products
-  const beautyProducts = products.filter(p => p.category === 'Beauty & Personal Care');
-  console.log(`Total Beauty & Personal Care products: ${beautyProducts.length}`);
-  
-  beautyProducts.forEach(p => {
-    console.log(`- ID: ${p.id}, Name: "${p.name}", Price: £${p.price}`);
-  });
-  
-  // Check product with ID 19
-  const product19 = products.find(p => p.id === '19');
-  console.log('\n=== PRODUCT ID 19 ===');
-  console.log(product19 ? 
-    `Found: ID: ${product19.id}, Name: "${product19.name}", Category: "${product19.category}"` : 
-    'Product with ID 19 not found!');
-  
-  // Check how many products are in Beauty category (excluding current)
-  const currentProduct = product; // Assuming product is the current one
-  console.log('\n=== CURRENT PRODUCT ===');
-  console.log(`ID: ${currentProduct.id}, Name: "${currentProduct.name}", Category: "${currentProduct.category}"`);
-  
-  const otherBeautyProducts = beautyProducts.filter(p => p.id !== currentProduct.id);
-  console.log(`\nOther Beauty products (excluding current): ${otherBeautyProducts.length}`);
-  otherBeautyProducts.forEach(p => {
-    console.log(`- ID: ${p.id}, Name: "${p.name}"`);
-  });
-  
-  return otherBeautyProducts;
-};
-
-// Call it
-checkProducts();
-
   // Calculate total price based on quantity
   const totalPrice = product.price * quantity;
-
-  // COMPREHENSIVE DEBUG
-  useEffect(() => {
-    console.log('=== PRODUCT PAGE DEBUG START ===');
-    console.log('Current product details:', {
-      id: product.id,
-      name: product.name,
-      category: product.category,
-      price: product.price
-    });
-    
-    // Check all Beauty & Personal Care products
-    const allBeautyProducts = products.filter(p => p.category === 'Beauty & Personal Care');
-    console.log('All products in "Beauty & Personal Care" category:', allBeautyProducts.length);
-    console.log('Beauty products list:', allBeautyProducts.map(p => ({ id: p.id, name: p.name })));
-    
-    // Check if current product is in the list
-    const isCurrentProductBeauty = allBeautyProducts.some(p => p.id === product.id);
-    console.log('Is current product in Beauty category?', isCurrentProductBeauty);
-    
-    // Check for category variations
-    const allCategories = [...new Set(products.map(p => p.category))];
-    console.log('All unique categories in database:', allCategories);
-    
-    // Check for similar categories
-    console.log('Looking for similar categories to:', product.category);
-    
-    // Get products from same category (excluding current)
-    const sameCategoryProducts = products.filter(p => 
-      p.category === product.category && p.id !== product.id
-    );
-    console.log('Products in same category (excluding current):', sameCategoryProducts.length);
-    console.log('Same category products:', sameCategoryProducts.map(p => ({ id: p.id, name: p.name })));
-    
-    // Get related products using the function
-    const relatedProductsDebug = getRelatedProductsDebug();
-    console.log('Related products found:', relatedProductsDebug.length);
-    console.log('Related products details:', relatedProductsDebug.map(p => ({ 
-      id: p.id, 
-      name: p.name, 
-      category: p.category 
-    })));
-    
-    console.log('=== PRODUCT PAGE DEBUG END ===');
-    
-    // Scroll to top
-    window.scrollTo(0, 0);
-  }, [product.id, product.category]);
-
-  // Debug version of getRelatedProducts
-  const getRelatedProductsDebug = () => {
-    if (!product.category) {
-      console.log('No category for product, returning empty array');
-      return [];
-    }
-    
-    console.log('DEBUG: Starting getRelatedProducts for category:', product.category);
-    
-    // First, get products from the same category
-    const sameCategoryProducts = products.filter(p => 
-      p.category === product.category && p.id !== product.id
-    );
-    
-    console.log('DEBUG: Found', sameCategoryProducts.length, 'products in same category');
-    sameCategoryProducts.forEach(p => {
-      console.log('  -', p.name, '(ID:', p.id, ')');
-    });
-    
-    // If we have enough products, return them
-    if (sameCategoryProducts.length >= 4) {
-      console.log('DEBUG: Returning', Math.min(sameCategoryProducts.length, 6), 'products from same category');
-      return shuffleArray(sameCategoryProducts).slice(0, 6);
-    }
-    
-    console.log('DEBUG: Not enough products in same category, looking for similar categories');
-    
-    // Get similar categories
-    const similarCategories = getSimilarCategories(product.category);
-    console.log('DEBUG: Similar categories for', product.category, ':', similarCategories);
-    
-    let similarProducts: Product[] = [];
-    
-    // Try each similar category
-    similarCategories.forEach(cat => {
-      const productsInCat = products.filter(p => 
-        p.category === cat && 
-        p.id !== product.id &&
-        !sameCategoryProducts.some(rp => rp.id === p.id)
-      );
-      
-      if (productsInCat.length > 0) {
-        console.log(`DEBUG: Found ${productsInCat.length} products in similar category "${cat}"`);
-        const shuffled = shuffleArray(productsInCat).slice(0, 2);
-        similarProducts = [...similarProducts, ...shuffled];
-      }
-    });
-    
-    console.log('DEBUG: Found', similarProducts.length, 'products from similar categories');
-    
-    // If we still don't have enough, get some random products
-    if (sameCategoryProducts.length + similarProducts.length < 4) {
-      const remainingCount = 4 - (sameCategoryProducts.length + similarProducts.length);
-      console.log('DEBUG: Still need', remainingCount, 'more products, getting random ones');
-      
-      const allOtherProducts = products.filter(p => 
-        p.id !== product.id &&
-        !sameCategoryProducts.some(rp => rp.id === p.id) &&
-        !similarProducts.some(sp => sp.id === p.id)
-      );
-      
-      const randomProducts = shuffleArray(allOtherProducts).slice(0, remainingCount);
-      similarProducts = [...similarProducts, ...randomProducts];
-      
-      console.log('DEBUG: Added', randomProducts.length, 'random products');
-    }
-    
-    // Combine and return up to 6 products
-    const allRelated = [...sameCategoryProducts, ...similarProducts];
-    console.log('DEBUG: Total related products:', allRelated.length);
-    return shuffleArray(allRelated).slice(0, 6);
-  };
 
   // Helper function to shuffle array (for variety)
   const shuffleArray = (array: Product[]) => {
@@ -193,8 +36,6 @@ checkProducts();
 
   // Helper function to get similar categories
   const getSimilarCategories = (category: string) => {
-    console.log('DEBUG getSimilarCategories called with:', category);
-    
     const categoryGroups: { [key: string]: string[] } = {
       'all': ['Fresh Food', 'Snacks', 'Drinks', 'Beauty & Personal Care'],
       'Groceries': ['Fresh Food', 'Dry Goods', 'Snacks', 'Vegetables & Fresh Produce'],
@@ -215,9 +56,7 @@ checkProducts();
       'Fruit wine': ['Drinks', 'Snacks']
     };
     
-    const result = categoryGroups[category] || [];
-    console.log('DEBUG getSimilarCategories returning:', result);
-    return result;
+    return categoryGroups[category] || [];
   };
 
   // Get related products from the same category
@@ -382,9 +221,6 @@ checkProducts();
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Debug Panel - Remove in production */}
-       
-
         {/* Breadcrumb */}
         <nav className="mb-6">
           <button
@@ -436,11 +272,11 @@ checkProducts();
                       <Star
                         key={i}
                         size={16}
-                        className={`${i < 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
+                        className={`${i < 5 ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">(4.2) • 127 reviews</span>
+                  <span className="text-sm text-gray-600">(5.0) • 127 reviews</span>
                 </div>
               </div>
 
@@ -469,13 +305,13 @@ checkProducts();
               </div>
 
               {/* Description */}
-              <div className="mb-6 text-black">
-                <h3 className="text-lg font-semibold mb-2">Description</h3>
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-2 text-gray-900">Description</h3>
                 <p className="text-gray-600">{product.description}</p>
               </div>
 
-              {/* Quantity and Add to Cart - Updated with better quantity controls */}
-              <div className="mb-6 text-black">
+              {/* Quantity and Add to Cart */}
+              <div className="mb-6">
                 <div className="flex items-center space-x-4 mb-4">
                   <label className="text-sm font-medium text-gray-700">Quantity:</label>
                   <div className="flex items-center border border-gray-300 rounded-lg">
@@ -496,12 +332,12 @@ checkProducts();
                       +
                     </button>
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-500 text-black" >
                     {quantity} item{quantity !== 1 ? 's' : ''} selected
                   </span>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-4 text-black">
+                <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={handleAddToCart}
                     disabled={!product.inStock}
@@ -512,23 +348,22 @@ checkProducts();
                     }`}
                   >
                     <ShoppingCart size={20} />
-                    <span>Add {quantity} to Cart - £{totalPrice.toFixed(2)}</span>
+                    <span >Add {quantity} to Cart - £{totalPrice.toFixed(2)}</span>
                   </button>
                   
                   <button 
                     onClick={handleShare}
                     className="flex items-center justify-center space-x-2 py-3 px-6 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <Share2 size={20} />
-                    <span>Share</span>
+                    <Share2 className='text-black' size={20} />
+                    <span className='text-black'>Share</span>
                   </button>
                 </div>
               </div>
 
               {/* Features */}
-              <div className="border-t pt-6 text-black">
+              <div className="border-t pt-6">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Shield size={16} className="text-emerald-600" />
                     <span>Quality guaranteed</span>
@@ -536,6 +371,10 @@ checkProducts();
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <RotateCcw size={16} className="text-emerald-600" />
                     <span>Easy returns</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Truck size={16} className="text-emerald-600" />
+                    <span>Fast delivery</span>
                   </div>
                 </div>
               </div>
@@ -620,57 +459,64 @@ checkProducts();
           </div>
         )}
 
-        {/* Reviews Section */}
+        {/* Delivery Section - Just Text */}
         <div className="bg-white rounded-lg shadow-md mt-8 p-8">
-          <h2 className="text-2xl font-bold mb-6 text-black">Customer Reviews</h2>
+          <h2 className="text-2xl font-bold mb-6 text-gray-900">Delivery Information</h2>
           
-          <div className="space-y-6">
-            {[
-              {
-                name: "Sarah Johnson",
-                rating: 5,
-                date: "2 days ago",
-                comment: "Excellent quality! Just like what I remember from home. Will definitely order again."
-              },
-              {
-                name: "Michael Chen",
-                rating: 4,
-                date: "1 week ago", 
-                comment: "Good product, arrived quickly and well packaged. Slightly expensive but worth it for the quality."
-              },
-              {
-                name: "Aisha Patel",
-                rating: 5,
-                date: "2 weeks ago",
-                comment: "Perfect! Exactly what I was looking for. Great service and fast delivery."
-              }
-            ].map((review, index) => (
-              <div key={index} className="border-b text-black border-gray-200 pb-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold">{review.name}</span>
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          size={14}
-                          className={`${i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                  <span className="text-sm text-gray-500">{review.date}</span>
-                </div>
-                <p className="text-gray-600">{review.comment}</p>
+          <div className="space-y-4 text-gray-600">
+            <div className="flex items-start space-x-3">
+              <Truck className="text-emerald-600 mt-1 flex-shrink-0" size={20} />
+              <div>
+                <p className="font-medium text-gray-900 mb-1">Standard Delivery</p>
+                <p>2-3 business days • £3.99  </p>
               </div>
-            ))}
+            </div>
+            
+            <div className="flex items-start space-x-3">
+              <Clock className="text-emerald-600 mt-1 flex-shrink-0" size={20} />
+              <div>
+                <p className="font-medium text-gray-900 mb-1">Express Delivery</p>
+                <p>Next business day • £6.99 </p>
+              </div>
+            </div>
+            
+            <div className="flex items-start space-x-3">
+              <Clock className="text-emerald-600 mt-1 flex-shrink-0" size={20} />
+              <div>
+                <p className="font-medium text-gray-900 mb-1">Same Day Delivery</p>
+                <p>Order by 2PM • £9.99 • Available in select areas</p>
+              </div>
+            </div>
+            
+            <div className="mt-6 pt-6 border-t border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-2">Delivery Process:</h3>
+              <ol className="list-decimal pl-5 space-y-2">
+                <li>Order placed and confirmed</li>
+                <li>Items picked and packed by our team</li>
+                <li>Order dispatched with tracking information</li>
+                <li>Delivered to your doorstep</li>
+              </ol>
+            </div>
+            
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <p className="font-medium text-gray-900">Delivery Notes:</p>
+              <p>• Orders placed before 6PM are dispatched same day</p>
+              <p>• Real-time tracking available for all orders</p>
+              <p>• Contactless delivery options available</p>
+              <p>• Delivery times may vary by location</p>
+            </div>
+            
+            <div className="mt-6 p-4 bg-emerald-50 rounded-lg">
+              <p className="font-semibold text-emerald-800">Need help with delivery?</p>
+              <p className="text-emerald-700">Contact our customer service team for delivery assistance or special requests.</p>
+            </div>
           </div>
         </div>
 
         {/* Related Products Section */}
-        <div className="bg-white rounded-lg shadow-md mt-8 p-8 text-black">
+        <div className="bg-white rounded-lg shadow-md mt-8 p-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-2xl font-bold text-gray-900">
               {relatedProducts.length > 0 ? 'Related Products' : 'You Might Also Like'}
             </h2>
             <span className="text-sm text-gray-500">

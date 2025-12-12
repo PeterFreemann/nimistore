@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Package, Truck, Star, Clock, Shield, Heart, CheckCircle } from 'lucide-react';
+import CombinedCategorySection from '../components/CombinedCategorySectio';
 
 export default function HowItWorks(): React.JSX.Element {
   const [isVisible, setIsVisible] = useState(false);
