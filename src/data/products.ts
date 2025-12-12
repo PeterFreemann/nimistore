@@ -794,7 +794,7 @@ export const products: Product[] = [
   { id: '78',
     name: 'Hole peppersoup mix',
     price: 3.99,
-    image: image79,  
+    image: image80,  
     category: 'Fresh Food',  // Changed from lowercase 'fresh food'
     description: 'Traditional Nigerian peppersoup seasoning mix',
     inStock: true,
