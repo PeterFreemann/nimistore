@@ -188,7 +188,7 @@ export const products: Product[] = [
     price: 39.99,
     image: image11,
     category: 'Fresh Food',
-    description: 'Bananas',
+    description: 'Plantain',
     inStock: true,
     weight: '1.5kg'
   },
