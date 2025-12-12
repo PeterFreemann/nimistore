@@ -18,7 +18,7 @@ export default function ProductCarousel({
   onProductClick, 
   onCategoryClick,
   onViewClick,
-  autoScrollInterval = 3000 // Increased interval for better UX
+  autoScrollInterval = 1000 
 }: ProductCarouselProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
@@ -27,11 +27,9 @@ export default function ProductCarousel({
   const [currentIndex, setCurrentIndex] = useState(0);
   const userScrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Calculate card width including gap
   const getCardWidth = () => {
-    if (typeof window === 'undefined') return 320; // Default fallback
+    if (typeof window === 'undefined') return 320; 
     
-    // For mobile, use the actual card width + gap
     const isMobile = window.innerWidth < 768;
     if (isMobile) {
       return 280 + 24; // card width + gap (adjust based on your actual card width)

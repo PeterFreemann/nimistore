@@ -52,10 +52,11 @@ export default function HomePage({ onProductClick, onCategoryClick }: HomePagePr
       <HeroSection />
       <BrandBanner />
       {/* <TrustBadges /> */}
-      <CategoriesSection onCategoryClick={onCategoryClick} />
-      <PromotionalAd onCategoryClick={onCategoryClick} />
+      
+      {/* <PromotionalAd onCategoryClick={onCategoryClick} /> */}
       
       {/* Groceries Categories - Keep as is */}
+      {/* <CategoriesSection onCategoryClick={onCategoryClick} /> */}
       <ProductCarousel
         title="Groceries "
         products={groceriesProducts}

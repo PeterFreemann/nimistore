@@ -42,7 +42,7 @@ export default function BrandBanner(): JSX.Element {
                    animation: 'slideInRight 0.6s ease-out 1s forwards'
                  }}>
               <Award className="mr-2 text-yellow-300 animate-pulse" size={16} />
-              <span>Trusted since 2019</span>
+              <span>Trusted </span>
             </div>
           </div>
         </div>

@@ -145,13 +145,13 @@ export default function CartPage({ onCheckoutClick, onContinueShoppingClick }: C
                 </div>
               </div>
 
-              {total < 50 && (
+              {/* {total < 50 && (
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
                   <p className="text-sm text-amber-800">
                     Add £{(50 - total).toFixed(2)} more for free delivery!
                   </p>
                 </div>
-              )}
+              )} */}
 
               <button
                 onClick={() => {

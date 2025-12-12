@@ -401,11 +401,11 @@ export default function CheckoutPage({ onOrderComplete }: CheckoutPageProps) {
                     {deliveryMethod === 'pickup' ? 'Free' : deliveryFee === 0 ? 'Free' : `£${deliveryFee.toFixed(2)}`}
                   </span>
                 </div>
-                {total < 50 && deliveryMethod === 'delivery' && (
+                {/* {total < 50 && deliveryMethod === 'delivery' && (
                   <div className="text-sm text-emerald-600 bg-emerald-50 p-2 rounded">
                     Add £{(50 - total).toFixed(2)} more for free delivery!
                   </div>
-                )}
+                )} */}
                 <div className="border-t pt-3">
                   <div className="flex justify-between text-lg font-semibold">
                     <span>Total</span>
