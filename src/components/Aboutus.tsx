@@ -329,7 +329,7 @@ export default function AboutUs(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Mission Statement */}
+        
         <div className={`py-16 bg-gradient-to-r from-green-600 to-amber-600 rounded-2xl text-white text-center transform transition-all duration-1000 ease-out delay-1300 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
         }`}>
