@@ -276,7 +276,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                       />
                     ))}
                   </div>
-                  <span className="text-sm text-gray-600">(5.0) • 127 reviews</span>
+                  <span className="text-sm text-gray-600">(5.0)</span>
                 </div>
               </div>
 

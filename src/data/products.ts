@@ -304,7 +304,7 @@ export const products: Product[] = [
   },
   { id: '24',
     name: 'Vegetables',
-    price: 6.99,
+    price: 1.99,
     image: image24,
     category: 'Fresh Food',
     description: 'Efo',
@@ -557,15 +557,15 @@ export const products: Product[] = [
     inStock: true,
     weight: ''
   },
-  { id: '52',
-    name: 'premium chapman',
-    price: 16.99,
-    image: image55,  
-    category: 'Drinks',  // Changed from lowercase 'drinks'
-    description: '12 bottle pack§',
-    inStock: true,
-    weight: ''
-  },
+  // { id: '52',
+  //   name: 'AFRIMALT',
+  //   price: 16.99,
+  //   image: image55,  
+  //   category: 'Drinks',  // Changed from lowercase 'drinks'
+  //   description: '12 bottle pack',
+  //   inStock: true,
+  //   weight: ''
+  // },
   { id: '53',
     name: 'Abiglobal ijebu garri',
     price: 10.99,
@@ -594,7 +594,7 @@ export const products: Product[] = [
     weight: 'g'
   },
   { id: '56',
-    name: 'chicken noodles',
+    name: 'Chicken noodles',
     price: 8.99,
     image: image59,  
     category: 'Fresh Food',  // Changed from 'Fresh food'
@@ -738,7 +738,7 @@ export const products: Product[] = [
     weight: '1kg'
   },
   { id: '72',
-    name: 'premium chapman',
+    name: 'Premium chapman',
     price: 16.99,
     image: image75,  
     category: 'Drinks',  // Changed from lowercase 'drinks'
