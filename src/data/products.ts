@@ -97,7 +97,7 @@ const image76 = '/Bread.png';
 const image77 = '/Yams.png';
 const image78 = '/Plantainchips.png';
 const image79 = '/thairice.png';
-const image80 = './peppersoup.png';
+const image80 = '/peppersoup.jpg';
 
 export const products: Product[] = [
   { id: '1',
@@ -792,11 +792,11 @@ export const products: Product[] = [
     weight: '10kg'
   },
   { id: '78',
-    name: 'Hole peppersoup mix',
+    name: 'Hole Pepper soup mix',
     price: 3.99,
     image: image80,  
     category: 'Fresh Food',  // Changed from lowercase 'fresh food'
-    description: 'Traditional Nigerian peppersoup seasoning mix',
+    description: 'Traditional peppersoup seasoning mix',
     inStock: true,
     weight: ''
   },
