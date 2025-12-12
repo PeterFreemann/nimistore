@@ -430,7 +430,7 @@ export default function EnhancedChatbot({ onCategoryClick }: ChatbotProps) {
       {/* Chat Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-[9999] bg-gradient-to-r from-amber-600 to-amber-700 text-white p-4 rounded-full shadow-lg hover:from-amber-500 hover:to-amber-600 transition-all duration-300 transform hover:scale-110"
+        className="fixed bottom-6 right-6 z-[9999] bg-gradient-to-r from-amber-500 to-amber-600 text-white p-4 rounded-full shadow-lg hover:from-amber-500 hover:to-amber-600 transition-all duration-300 transform hover:scale-110"
       >
         {isOpen ? <X size={24} /> : <MessageCircle size={24} />}
       </button>
