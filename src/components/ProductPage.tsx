@@ -332,7 +332,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                       +
                     </button>
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-500 text-black" >
                     {quantity} item{quantity !== 1 ? 's' : ''} selected
                   </span>
                 </div>
@@ -348,15 +348,15 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
                     }`}
                   >
                     <ShoppingCart size={20} />
-                    <span>Add {quantity} to Cart - £{totalPrice.toFixed(2)}</span>
+                    <span >Add {quantity} to Cart - £{totalPrice.toFixed(2)}</span>
                   </button>
                   
                   <button 
                     onClick={handleShare}
                     className="flex items-center justify-center space-x-2 py-3 px-6 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                   >
-                    <Share2 size={20} />
-                    <span>Share</span>
+                    <Share2 className='text-black' size={20} />
+                    <span className='text-black'>Share</span>
                   </button>
                 </div>
               </div>
