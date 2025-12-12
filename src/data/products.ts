@@ -432,7 +432,7 @@ export const products: Product[] = [
   
 
   { id: '38',
-    name: 'large mackerel',
+    name: 'Large mackerel',
     price: 5.99,
     image: image41,  
     category: 'Frozen proteins',
@@ -441,7 +441,7 @@ export const products: Product[] = [
     weight: 'per kg'
   },
   { id: '39',
-    name: 'large turkey midwing',
+    name: 'Large turkey midwing',
     price: 3.99,
     image: image42,  
     category: 'Frozen proteins',
@@ -450,7 +450,7 @@ export const products: Product[] = [
     weight: '1kg'
   },
   { id: '40',
-    name: 'medium turkey midwing',
+    name: 'Medium turkey midwing',
     price: 3.80,
     image: image43,  
     category: 'Frozen proteins',
@@ -486,7 +486,7 @@ export const products: Product[] = [
     weight: '6kg per box'
   },
   { id: '44',
-    name: 'frozen catfish',
+    name: 'Frozen catfish',
     price: 20.99,
     image: image47,  
     category: 'Frozen proteins',
@@ -549,7 +549,7 @@ export const products: Product[] = [
     weight: '100g'
   },
   { id: '51',
-    name: 'schweppes',
+    name: 'Schweppes',
     price: 14.99,
     image: image54,  
     category: 'Drinks',
@@ -639,7 +639,7 @@ export const products: Product[] = [
     weight: '1kg'
   },
   { id: '61',
-    name: 'coconut peanut',
+    name: 'Coconut peanut',
     price: 28.99,
     image: image64,  
     category: 'Snacks',
