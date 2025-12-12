@@ -292,7 +292,7 @@ export default function AboutUs(): React.JSX.Element {
           </div>
         </div>
 
-        {/* Team Section */}
+        
         <div className={`py-16 transform transition-all duration-1000 ease-out delay-1100 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
         }`}>
