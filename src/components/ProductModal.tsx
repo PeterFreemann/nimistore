@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import { X, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { Product } from '../context/CartContext';
@@ -29,6 +31,7 @@ export default function ProductModal({ product, isOpen, onClose }: ProductModalP
     for (let i = 0; i < quantity; i++) {
       addItem(product);
     }
+    onClose();
   };
 
   const incrementQuantity = () => {

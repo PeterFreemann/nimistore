@@ -64,7 +64,7 @@ export default function BrandValues({ onCategoryClick }: BrandValuesProps): Reac
                   <span className="text-2xl">👨‍👩‍👧‍👦</span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2 text-gray-900">Family Business</h3>
-                <p className="text-gray-600">Serving our community with love since 2019</p>
+                <p className="text-gray-600">Serving our community with love</p>
               </div>
             </div>
             

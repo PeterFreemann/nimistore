@@ -21,13 +21,254 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
   const [copied, setCopied] = useState(false);
   const { addItem } = useCart();
 
+  // Add this code temporarily in your ProductPage component or run in browser console
+const checkProducts = () => {
+  console.log('=== CHECKING ALL PRODUCTS ===');
+  
+  // Get all Beauty & Personal Care products
+  const beautyProducts = products.filter(p => p.category === 'Beauty & Personal Care');
+  console.log(`Total Beauty & Personal Care products: ${beautyProducts.length}`);
+  
+  beautyProducts.forEach(p => {
+    console.log(`- ID: ${p.id}, Name: "${p.name}", Price: £${p.price}`);
+  });
+  
+  // Check product with ID 19
+  const product19 = products.find(p => p.id === '19');
+  console.log('\n=== PRODUCT ID 19 ===');
+  console.log(product19 ? 
+    `Found: ID: ${product19.id}, Name: "${product19.name}", Category: "${product19.category}"` : 
+    'Product with ID 19 not found!');
+  
+  // Check how many products are in Beauty category (excluding current)
+  const currentProduct = product; // Assuming product is the current one
+  console.log('\n=== CURRENT PRODUCT ===');
+  console.log(`ID: ${currentProduct.id}, Name: "${currentProduct.name}", Category: "${currentProduct.category}"`);
+  
+  const otherBeautyProducts = beautyProducts.filter(p => p.id !== currentProduct.id);
+  console.log(`\nOther Beauty products (excluding current): ${otherBeautyProducts.length}`);
+  otherBeautyProducts.forEach(p => {
+    console.log(`- ID: ${p.id}, Name: "${p.name}"`);
+  });
+  
+  return otherBeautyProducts;
+};
+
+// Call it
+checkProducts();
+
   // Calculate total price based on quantity
   const totalPrice = product.price * quantity;
 
-  // Scroll to top when component mounts or product changes
+  // COMPREHENSIVE DEBUG
   useEffect(() => {
+    console.log('=== PRODUCT PAGE DEBUG START ===');
+    console.log('Current product details:', {
+      id: product.id,
+      name: product.name,
+      category: product.category,
+      price: product.price
+    });
+    
+    // Check all Beauty & Personal Care products
+    const allBeautyProducts = products.filter(p => p.category === 'Beauty & Personal Care');
+    console.log('All products in "Beauty & Personal Care" category:', allBeautyProducts.length);
+    console.log('Beauty products list:', allBeautyProducts.map(p => ({ id: p.id, name: p.name })));
+    
+    // Check if current product is in the list
+    const isCurrentProductBeauty = allBeautyProducts.some(p => p.id === product.id);
+    console.log('Is current product in Beauty category?', isCurrentProductBeauty);
+    
+    // Check for category variations
+    const allCategories = [...new Set(products.map(p => p.category))];
+    console.log('All unique categories in database:', allCategories);
+    
+    // Check for similar categories
+    console.log('Looking for similar categories to:', product.category);
+    
+    // Get products from same category (excluding current)
+    const sameCategoryProducts = products.filter(p => 
+      p.category === product.category && p.id !== product.id
+    );
+    console.log('Products in same category (excluding current):', sameCategoryProducts.length);
+    console.log('Same category products:', sameCategoryProducts.map(p => ({ id: p.id, name: p.name })));
+    
+    // Get related products using the function
+    const relatedProductsDebug = getRelatedProductsDebug();
+    console.log('Related products found:', relatedProductsDebug.length);
+    console.log('Related products details:', relatedProductsDebug.map(p => ({ 
+      id: p.id, 
+      name: p.name, 
+      category: p.category 
+    })));
+    
+    console.log('=== PRODUCT PAGE DEBUG END ===');
+    
+    // Scroll to top
     window.scrollTo(0, 0);
-  }, [product.id]);
+  }, [product.id, product.category]);
+
+  // Debug version of getRelatedProducts
+  const getRelatedProductsDebug = () => {
+    if (!product.category) {
+      console.log('No category for product, returning empty array');
+      return [];
+    }
+    
+    console.log('DEBUG: Starting getRelatedProducts for category:', product.category);
+    
+    // First, get products from the same category
+    const sameCategoryProducts = products.filter(p => 
+      p.category === product.category && p.id !== product.id
+    );
+    
+    console.log('DEBUG: Found', sameCategoryProducts.length, 'products in same category');
+    sameCategoryProducts.forEach(p => {
+      console.log('  -', p.name, '(ID:', p.id, ')');
+    });
+    
+    // If we have enough products, return them
+    if (sameCategoryProducts.length >= 4) {
+      console.log('DEBUG: Returning', Math.min(sameCategoryProducts.length, 6), 'products from same category');
+      return shuffleArray(sameCategoryProducts).slice(0, 6);
+    }
+    
+    console.log('DEBUG: Not enough products in same category, looking for similar categories');
+    
+    // Get similar categories
+    const similarCategories = getSimilarCategories(product.category);
+    console.log('DEBUG: Similar categories for', product.category, ':', similarCategories);
+    
+    let similarProducts: Product[] = [];
+    
+    // Try each similar category
+    similarCategories.forEach(cat => {
+      const productsInCat = products.filter(p => 
+        p.category === cat && 
+        p.id !== product.id &&
+        !sameCategoryProducts.some(rp => rp.id === p.id)
+      );
+      
+      if (productsInCat.length > 0) {
+        console.log(`DEBUG: Found ${productsInCat.length} products in similar category "${cat}"`);
+        const shuffled = shuffleArray(productsInCat).slice(0, 2);
+        similarProducts = [...similarProducts, ...shuffled];
+      }
+    });
+    
+    console.log('DEBUG: Found', similarProducts.length, 'products from similar categories');
+    
+    // If we still don't have enough, get some random products
+    if (sameCategoryProducts.length + similarProducts.length < 4) {
+      const remainingCount = 4 - (sameCategoryProducts.length + similarProducts.length);
+      console.log('DEBUG: Still need', remainingCount, 'more products, getting random ones');
+      
+      const allOtherProducts = products.filter(p => 
+        p.id !== product.id &&
+        !sameCategoryProducts.some(rp => rp.id === p.id) &&
+        !similarProducts.some(sp => sp.id === p.id)
+      );
+      
+      const randomProducts = shuffleArray(allOtherProducts).slice(0, remainingCount);
+      similarProducts = [...similarProducts, ...randomProducts];
+      
+      console.log('DEBUG: Added', randomProducts.length, 'random products');
+    }
+    
+    // Combine and return up to 6 products
+    const allRelated = [...sameCategoryProducts, ...similarProducts];
+    console.log('DEBUG: Total related products:', allRelated.length);
+    return shuffleArray(allRelated).slice(0, 6);
+  };
+
+  // Helper function to shuffle array (for variety)
+  const shuffleArray = (array: Product[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  // Helper function to get similar categories
+  const getSimilarCategories = (category: string) => {
+    console.log('DEBUG getSimilarCategories called with:', category);
+    
+    const categoryGroups: { [key: string]: string[] } = {
+      'all': ['Fresh Food', 'Snacks', 'Drinks', 'Beauty & Personal Care'],
+      'Groceries': ['Fresh Food', 'Dry Goods', 'Snacks', 'Vegetables & Fresh Produce'],
+      'Fresh Food': ['Vegetables & Fresh Produce', 'Dry Goods', 'Snacks', 'Groceries'],
+      'Frozen proteins': ['Meat, Fish & Poultry', 'Fresh Food', 'Groceries'],
+      'Drinks': ['Snacks', 'Fresh Food', 'Fruit wine'],
+      'Snacks': ['Drinks', 'Fresh Food', 'Bakery', 'Groceries'],
+      'Beauty & Personal Care': ['Health & Beauty', 'Household', 'Snacks', 'Health & Beauty'],
+      'Health & Beauty': ['Beauty & Personal Care', 'Household', 'Snacks'],
+      'Household': ['Beauty & Personal Care', 'Health & Beauty'],
+      'Dry Goods': ['Fresh Food', 'Snacks', 'Groceries', 'Pantry'],
+      'Vegetables & Fresh Produce': ['Fresh Food', 'Groceries', 'Dry Goods'],
+      'Meat, Fish & Poultry': ['Frozen proteins', 'Fresh Food', 'Groceries'],
+      'Ethnic Foods': ['Fresh Food', 'Snacks', 'Groceries'],
+      'Pantry': ['Fresh Food', 'Dry Goods', 'Groceries'],
+      'Bakery': ['Snacks', 'Fresh Food', 'Groceries'],
+      'Ready Meals': ['Fresh Food', 'Snacks', 'Groceries'],
+      'Fruit wine': ['Drinks', 'Snacks']
+    };
+    
+    const result = categoryGroups[category] || [];
+    console.log('DEBUG getSimilarCategories returning:', result);
+    return result;
+  };
+
+  // Get related products from the same category
+  const getRelatedProducts = () => {
+    if (!product.category) return [];
+    
+    // First, get products from the same category
+    const sameCategoryProducts = products.filter(p => 
+      p.category === product.category && p.id !== product.id
+    );
+    
+    // If we have enough products, return them
+    if (sameCategoryProducts.length >= 4) {
+      return shuffleArray(sameCategoryProducts).slice(0, 6);
+    }
+    
+    // If not enough, get products from similar categories
+    const similarCategories = getSimilarCategories(product.category);
+    
+    let similarProducts: Product[] = [];
+    
+    // Try each similar category
+    similarCategories.forEach(cat => {
+      const productsInCat = products.filter(p => 
+        p.category === cat && 
+        p.id !== product.id &&
+        !sameCategoryProducts.some(rp => rp.id === p.id)
+      );
+      
+      if (productsInCat.length > 0) {
+        similarProducts = [...similarProducts, ...shuffleArray(productsInCat).slice(0, 2)];
+      }
+    });
+    
+    // If we still don't have enough, get some random products
+    if (sameCategoryProducts.length + similarProducts.length < 4) {
+      const remainingCount = 4 - (sameCategoryProducts.length + similarProducts.length);
+      const allOtherProducts = products.filter(p => 
+        p.id !== product.id &&
+        !sameCategoryProducts.some(rp => rp.id === p.id) &&
+        !similarProducts.some(sp => sp.id === p.id)
+      );
+      
+      const randomProducts = shuffleArray(allOtherProducts).slice(0, remainingCount);
+      similarProducts = [...similarProducts, ...randomProducts];
+    }
+    
+    // Combine and return up to 6 products
+    const allRelated = [...sameCategoryProducts, ...similarProducts];
+    return shuffleArray(allRelated).slice(0, 6);
+  };
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
@@ -121,46 +362,6 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
     window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
-  // Get related products from the same category
-  const getRelatedProducts = () => {
-    if (!product.category) return [];
-    
-    const relatedProducts = products.filter(p => 
-      p.category === product.category && p.id !== product.id
-    );
-    
-    if (relatedProducts.length < 4) {
-      const similarCategories = getSimilarCategories(product.category);
-      const similarProducts = products.filter(p => 
-        similarCategories.includes(p.category) && 
-        p.id !== product.id &&
-        !relatedProducts.some(rp => rp.id === p.id)
-      );
-      
-      return [...relatedProducts, ...similarProducts].slice(0, 6);
-    }
-    
-    return relatedProducts.slice(0, 6);
-  };
-
-  // Helper function to get similar categories
-  const getSimilarCategories = (category: string) => {
-    const categoryGroups: { [key: string]: string[] } = {
-      'Fresh Food': ['Vegetables & Fresh Produce', 'Dry Goods'],
-      'Frozen proteins': ['Meat, Fish & Poultry', 'Fresh Food'],
-      'Drinks': ['Snacks'],
-      'Snacks': ['Drinks', 'Fresh Food'],
-      'Beauty & Personal Care': ['Health & Beauty', 'Household'],
-      'Health & Beauty': ['Beauty & Personal Care'],
-      'Household': ['Beauty & Personal Care'],
-      'Dry Goods': ['Fresh Food', 'Snacks'],
-      'Vegetables & Fresh Produce': ['Fresh Food'],
-      'Meat, Fish & Poultry': ['Frozen proteins']
-    };
-    
-    return categoryGroups[category] || [];
-  };
-
   // Handle view more related products - navigate to category page
   const handleViewMoreRelated = () => {
     if (onCategoryClick && product.category) {
@@ -181,6 +382,9 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Debug Panel - Remove in production */}
+       
+
         {/* Breadcrumb */}
         <nav className="mb-6">
           <button
@@ -324,10 +528,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
               {/* Features */}
               <div className="border-t pt-6 text-black">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Truck size={16} className="text-emerald-600" />
-                    <span>Free delivery over £50</span>
-                  </div>
+                  
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
                     <Shield size={16} className="text-emerald-600" />
                     <span>Quality guaranteed</span>
@@ -473,7 +674,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
               {relatedProducts.length > 0 ? 'Related Products' : 'You Might Also Like'}
             </h2>
             <span className="text-sm text-gray-500">
-              {relatedProducts.length > 0 
+              {relatedProducts.length > 0 && product.category 
                 ? `More in ${product.category}` 
                 : 'Discover other products'
               }
@@ -507,7 +708,7 @@ export default function ProductPage({ product, onBackClick, onProductClick, onCa
             </>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-500 mb-4">No related products found in the same category.</p>
+              <p className="text-gray-500 mb-4">No related products found.</p>
               <button
                 onClick={onBackClick}
                 className="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors font-semibold"

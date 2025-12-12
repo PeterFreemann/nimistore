@@ -58,7 +58,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
               <ul className="space-y-2">
                 <li>
                   <Link 
-                    href="/about"
+                    href="/about-us"  // Fixed: Changed from "/about" to "/about-us"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     About Us
@@ -66,7 +66,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    href="/contact"
+                    href="/contact-us"  // Fixed: Changed from "/contact" to "/contact-us"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Contact Us
@@ -74,7 +74,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    href="/how-it-works"
+                    href="/how-it-work"  // Fixed: Changed from "/how-it-works" to "/how-it-work"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     How it works
@@ -89,7 +89,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
               <ul className="space-y-2">
                 <li>
                   <Link 
-                    href="/category/fresh-food"
+                    href="/category/Fresh%20Food"  // Fixed: Use the same pattern as header
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Fresh Food
@@ -97,7 +97,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    href="/category/wine"
+                    href="/category/Fruit%20wine"  // Fixed: Changed from "/category/wine" to "/category/Fruit%20wine"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Fruit Wine
@@ -105,7 +105,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    href="/category/frozen-proteins"
+                    href="/category/Frozen%20proteins"  // Fixed: Changed from "/category/frozen-proteins" to "/category/Frozen%20proteins"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Frozen Proteins
@@ -113,7 +113,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    href="/category/drinks"
+                    href="/category/Drinks"  // Fixed: Changed from "/category/drinks" to "/category/Drinks"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     African Soft Drinks
@@ -121,7 +121,7 @@ export default function Footer({ onCategoryClick }: FooterProps) {
                 </li>
                 <li>
                   <Link 
-                    href="/category/beauty"
+                    href="/category/Beauty%20%26%20Personal%20Care"  // Fixed: Changed from "/category/beauty" to "/category/Beauty%20%26%20Personal%20Care"
                     className="text-green-100 hover:text-white transition-colors text-left"
                   >
                     Beauty and Personal Care

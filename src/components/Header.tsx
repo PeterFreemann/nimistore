@@ -12,7 +12,7 @@ import frozenproteinshero from '../../public/frozenproteins.png';
 import drinkshero from '../../public/softdrinks.jpg';
 import fruitwinehero from '../../public/fruitwine.jpg';
 import snackshero from '../../public/snacks.jpeg';
-import beautyhero from '../../public/beauty.jpg';
+import beautyhero from '../../public/snacks.jpeg';
 
 interface HeaderProps {
   selectedCategory?: string;
@@ -30,7 +30,7 @@ interface MainNavItem {
   hasDropdown?: boolean;
 }
 
-type HeroImageKey = 'Fresh Food' | 'Frozen proteins' | 'Drinks' | 'Wine' | 'Snacks' | 'Beauty & Personal Care';
+type HeroImageKey = 'Groceries' | 'Fresh Food' | 'Frozen proteins' | 'Drinks' | 'Fruit wine' | 'Snacks' | 'Beauty & Personal Care';
 
 export default function Header({ selectedCategory }: HeaderProps): React.JSX.Element {
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -46,12 +46,13 @@ export default function Header({ selectedCategory }: HeaderProps): React.JSX.Ele
     router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
   };
 
-  // Hero images mapping
+  // Hero images mapping - UPDATED with correct key
   const heroImages: Record<HeroImageKey, StaticImageData> = {
+    'Groceries': farmproducehero,
     'Fresh Food': farmproducehero,
     'Frozen proteins': frozenproteinshero,
     'Drinks': drinkshero,
-    'Wine': fruitwinehero,
+    'Fruit wine': fruitwinehero, // Changed from 'Fruit Wine' to 'Fruit wine'
     'Snacks': snackshero,
     'Beauty & Personal Care': beautyhero,
   };
@@ -77,15 +78,40 @@ export default function Header({ selectedCategory }: HeaderProps): React.JSX.Ele
     { name: 'How it Works', href: '/how-it-work' },
   ];
 
-  // Category items for dropdown
+  // Category items for dropdown - Make sure these match exactly with your products' category names
   const categoryItems: CategoryItem[] = [
-    { name: 'Fresh Food', category: 'Fresh Food', href: '/category/fresh-food' },
-    { name: 'Frozen Proteins', category: 'Frozen proteins', href: '/category/frozen-proteins' },
-    { name: 'African Soft Drinks', category: 'Drinks', href: '/category/drinks' },
-    { name: 'Fruit Wine', category: 'Wine', href: '/category/wine' },
-    { name: 'Snacks', category: 'Snacks', href: '/category/snacks' },
-    { name: 'Beauty & Personal Care', category: 'Beauty & Personal Care', href: '/category/beauty' },
-  ];
+  { 
+    name: 'Fresh Food', 
+    category: 'Fresh Food', 
+    href: '/category/Fresh%20Food' 
+  },
+  { 
+    name: 'Frozen Proteins', 
+    category: 'Frozen proteins', 
+    href: '/category/Frozen%20proteins' 
+  },
+  { 
+    name: 'African Soft Drinks', 
+    category: 'Drinks', 
+    href: '/category/Drinks' 
+  },
+  { 
+    name: 'Fruit Wine', 
+    category: 'Fruit wine', // Make sure this EXACTLY matches product.category
+    href: '/category/Fruit%20wine' 
+  },
+  { 
+    name: 'Snacks', 
+    category: 'Snacks', 
+    href: '/category/Snacks' 
+  },
+  { 
+    name: 'Beauty & Personal Care', 
+    category: 'Beauty & Personal Care', 
+    href: '/category/Beauty%20%26%20Personal%20Care' 
+  },
+];
+
 
   // Check if a nav item is active
   const isActive = (href: string): boolean => {
@@ -97,7 +123,7 @@ export default function Header({ selectedCategory }: HeaderProps): React.JSX.Ele
 
   // Check if category is active
   const isCategoryActive = (categoryHref: string): boolean => {
-    return pathname === categoryHref;
+    return decodeURIComponent(pathname) === categoryHref;
   };
 
   const currentHeroImage = getCurrentHeroImage();

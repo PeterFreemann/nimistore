@@ -2,7 +2,6 @@ import React from "react";
 import { ShoppingCart, Star, Eye } from "lucide-react";
 import { Product } from "../context/CartContext";
 import { useCart } from "../context/CartContext";
-import image from "../images/nimi.png";
 
 interface ProductCardProps {
   product: Product;
@@ -17,23 +16,50 @@ export default function ProductCard({
 }: ProductCardProps) {
   const { addItem } = useCart();
 
+  // Add debug logging
+  React.useEffect(() => {
+    console.log(`ProductCard loaded for: ${product.name} (ID: ${product.id})`);
+    console.log('Product data:', product);
+  }, [product]);
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('Add to cart clicked for:', product.name);
     addItem(product);
   };
 
   const handleViewClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('View button clicked for:', product.name);
+    
     if (onViewClick) {
+      console.log('Calling onViewClick');
       onViewClick(product);
     } else {
-      // Fallback to onProductClick if onViewClick is not provided
+      console.log('No onViewClick, calling onProductClick');
       onProductClick(product);
     }
   };
 
-  const handleCardClick = () => {
-    onProductClick(product);
+  const handleCardClick = (e: React.MouseEvent) => {
+    console.log('=== PRODUCT CARD CLICK DEBUG ===');
+    console.log('Card clicked for product:', product.name);
+    console.log('Product ID:', product.id);
+    console.log('Product category:', product.category);
+    console.log('Event target:', e.target);
+    console.log('Event current target:', e.currentTarget);
+    console.log('onProductClick function exists:', !!onProductClick);
+    console.log('=== END DEBUG ===');
+    
+    e.stopPropagation();
+    e.preventDefault();
+    
+    if (onProductClick) {
+      console.log('Calling onProductClick with product:', product);
+      onProductClick(product);
+    } else {
+      console.error('ERROR: onProductClick is undefined!');
+    }
   };
 
   // Default rating if not provided
@@ -44,6 +70,9 @@ export default function ProductCard({
       className="rounded-lg overflow-hidden cursor-pointer relative group w-65 bg-white shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100"
       onClick={handleCardClick}
     >
+      {/* Debug badge */}
+      
+      
       {/* Product Image Container */}
       <div className="relative w-full h-48 flex items-center justify-center bg-gray-50 p-4">
         <img
@@ -79,6 +108,13 @@ export default function ProductCard({
         <h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-2 leading-tight">
           {product.name}
         </h3>
+
+        {/* Category badge */}
+        <div className="mb-2">
+          <span className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded">
+            {product.category}
+          </span>
+        </div>
 
         {/* Price and Add to Cart Button - Always Visible */}
         <div className="flex items-center justify-between">

@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { Leaf, Snowflake, Droplet, Cookie, Wine, Sparkles, Grid3x3 } from 'lucide-react';
 
@@ -11,17 +13,23 @@ interface CategoriesSectionProps {
   onCategoryClick: (category: string) => void;
 }
 
+// IMPORTANT: The 'value' field must match EXACTLY with product.category in your data
 const categories: Category[] = [
   { name: 'All Products', icon: <Grid3x3 className="w-8 h-8" />, value: 'all' },
   { name: 'Fresh Food', icon: <Leaf className="w-8 h-8" />, value: 'Fresh Food' },
   { name: 'Frozen Proteins', icon: <Snowflake className="w-8 h-8" />, value: 'Frozen proteins' },
   { name: 'African Soft Drinks', icon: <Droplet className="w-8 h-8" />, value: 'Drinks' },
   { name: 'Snacks', icon: <Cookie className="w-8 h-8" />, value: 'Snacks' },
-  { name: 'Fruit Wine', icon: <Wine className="w-8 h-8" />, value: 'Fruit wine' },
+  { name: 'Fruit Wine', icon: <Wine className="w-8 h-8" />, value: 'Fruit wine' }, // This must match exactly
   { name: 'Beauty & Personal Care', icon: <Sparkles className="w-8 h-8" />, value: 'Beauty & Personal Care' },
 ];
 
 export default function CategoriesSection({ onCategoryClick }: CategoriesSectionProps): React.JSX.Element {
+  const handleClick = (value: string) => {
+    console.log('CategoriesSection: Clicked on category:', value);
+    onCategoryClick(value);
+  };
+
   return (
     <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4">
@@ -30,10 +38,10 @@ export default function CategoriesSection({ onCategoryClick }: CategoriesSection
           {categories.map((category) => (
             <button
               key={category.name}
-              onClick={() => onCategoryClick(category.value)}
+              onClick={() => handleClick(category.value)}
               className="group bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >
-              <div className="relative h-24 overflow-hidden bg-gradient-to-br from-orange-600 via-orange-500 to-orange-400">
+              <div className="relative h-24 overflow-hidden bg-gradient-to-br from-amber-600 via-amber-500 to-amber-400">
                 <div className="absolute inset-0 bg-black bg-opacity-10 group-hover:bg-opacity-0 transition-all"></div>
                 <div className="absolute inset-0 flex items-center justify-center text-white">
                   {category.icon}
@@ -49,29 +57,5 @@ export default function CategoriesSection({ onCategoryClick }: CategoriesSection
         </div>
       </div>
     </section>
-  );
-}
-
-// Demo wrapper to show the component in action
-function App() {
-  const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
-
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    console.log('Selected category:', category);
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <CategoriesSection onCategoryClick={handleCategoryClick} />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <p className="text-gray-700">
-            <span className="font-semibold">Selected Category:</span>{' '}
-            <span className="text-green-700">{selectedCategory}</span>
-          </p>
-        </div>
-      </div>
-    </div>
   );
 }

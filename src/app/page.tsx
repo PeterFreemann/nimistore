@@ -11,12 +11,22 @@ export default function Home() {
   const router = useRouter();
 
   const handleProductClick = (product: Product) => {
+    // Navigate to product page
     router.push(`/product/${product.id}`);
   };
 
   const handleCategoryClick = (category: string) => {
-    const slug = category.toLowerCase().replace(/\s+/g, '-');
-    router.push(`/category/${slug}`);
+    // DON'T convert to slug - pass the category name as is
+    // URL encode it properly
+    console.log('Category clicked in Home:', category);
+    
+    if (category === 'all') {
+      router.push('/category/all');
+    } else {
+      // Use encodeURIComponent to handle spaces and special characters
+      const encodedCategory = encodeURIComponent(category);
+      router.push(`/category/${encodedCategory}`);
+    }
   };
 
   return (

@@ -4,7 +4,7 @@ import image2 from '../../public/ads8.png'
 import image3 from '../../public/ads9.jpg'
 import image4 from '../../public/ads10.jpg'
 import image5 from '../../public/ds5.jpg'
-import image6 from '../../public/ads6.jpg'
+import image6 from '../../public/ads7.jpg'
 
 function Ads() {
   const adsImages = [
